@@ -25,20 +25,27 @@
   <fieldset>
     <legend>Apostar</legend>
     <form id="apuestaForm">
-      <label>Usuario ID: <input type="number" name="usuarioId" required></label>
+      <label>Usuario:
+        <select name="usuarioId" required>
+          <option value="1">Toreto</option>
+          <option value="2">Sinhuellas</option>
+          <option value="3">Gari</option>
+        </select>
+      </label>
+
       <label>Carrera ID: <input type="number" name="carreraId" value="1" required></label>
+
       <label>Tipo de apuesta:
         <select name="tipo" id="tipoApuesta" required>
           <option value="posicion">Posición final</option>
           <option value="primer_movimiento">Primer en moverse</option>
           <option value="primer_salida">Primer en salirse</option>
           <option value="tiempo">Tiempo de llegada</option>
+          <option value="cuantos_llegan">Cuántos llegan</option>
         </select>
       </label>
 
-      <div id="objetivoContainer">
-        <!-- Aquí se generará dinámicamente el input según tipo -->
-      </div>
+      <div id="objetivoContainer"></div>
 
       <label>Cantidad de babosas: <input type="number" name="cantidad" required></label>
       <button type="submit">Apostar</button>
@@ -51,7 +58,7 @@
     <legend>Panel Admin</legend>
     <label>Carrera ID: <input type="number" id="adminCarreraId" value="1"></label>
     <label>Resultados JSON:</label>
-    <textarea id="adminResultados" placeholder='[{"nombre":"Rápido Slim","tiempoLlegada":5,"seMovioPrimero":true,"seSalio":false}]' rows="4" cols="50"></textarea>
+    <textarea id="adminResultados" placeholder='[{"nombre":"Toreto","tiempoLlegada":5,"seMovioPrimero":true,"seSalio":false}]' rows="4" cols="50"></textarea>
     <button id="iniciarCarrera">Iniciar Carrera</button>
     <button id="finalizarCarrera">Finalizar Carrera</button>
     <pre id="adminResult"></pre>
@@ -78,19 +85,28 @@
 
 <script>
 const API = "http://localhost:3000";
-let participantes = ["Rápido Slim", "Lento pero Seguro", "Turbo Baba"]; // Opciones de la carrera
+
+// Participantes de la carrera
+let participantes = [
+  "Toreto",
+  "Sinhuellas",
+  "Tro Gari",
+  "Arrastrado",
+  "Baboso Flash"
+];
 
 const objetivoContainer = document.getElementById("objetivoContainer");
 const tipoApuesta = document.getElementById("tipoApuesta");
 
-// Función para actualizar los inputs según tipo de apuesta
+// Función para actualizar inputs según tipo de apuesta
 function actualizarObjetivoInput() {
   const tipo = tipoApuesta.value;
   objetivoContainer.innerHTML = "";
 
-  if (tipo === "posicion") {
+  if(tipo === "posicion") {
     const label = document.createElement("label");
-    label.textContent = "Selecciona caracol y posición:";
+    label.textContent = "Selecciona caracol y posición (1º,2º,3º):";
+
     const selectCaracol = document.createElement("select");
     selectCaracol.name = "caracol";
     participantes.forEach(p => {
@@ -99,6 +115,7 @@ function actualizarObjetivoInput() {
       option.textContent = p;
       selectCaracol.appendChild(option);
     });
+
     const selectPos = document.createElement("select");
     selectPos.name = "posicion";
     [1,2,3].forEach(n => {
@@ -107,11 +124,12 @@ function actualizarObjetivoInput() {
       option.textContent = n;
       selectPos.appendChild(option);
     });
+
     label.appendChild(selectCaracol);
     label.appendChild(selectPos);
     objetivoContainer.appendChild(label);
   }
-  else if (tipo === "primer_movimiento" || tipo === "primer_salida") {
+  else if(tipo === "primer_movimiento" || tipo === "primer_salida") {
     const label = document.createElement("label");
     label.textContent = "Selecciona caracol:";
     const select = document.createElement("select");
@@ -125,25 +143,37 @@ function actualizarObjetivoInput() {
     label.appendChild(select);
     objetivoContainer.appendChild(label);
   }
-  else if (tipo === "tiempo") {
+  else if(tipo === "tiempo") {
     const label = document.createElement("label");
-    label.textContent = "Caracol y tiempo máximo (minutos, hasta 30):";
-    const inputNombre = document.createElement("input");
-    inputNombre.name = "nombre";
-    inputNombre.placeholder = "Nombre del caracol";
-    const inputTiempo = document.createElement("input");
-    inputTiempo.name = "tiempoMax";
-    inputTiempo.type = "number";
-    inputTiempo.min = 1;
-    inputTiempo.max = 30;
-    inputTiempo.placeholder = "Tiempo máximo";
-    label.appendChild(inputNombre);
-    label.appendChild(inputTiempo);
+    label.textContent = "Selecciona rango de tiempo:";
+    const select = document.createElement("select");
+    select.name = "tiempo";
+    ["0-10","10-20","20-30"].forEach(r => {
+      const option = document.createElement("option");
+      option.value = r;
+      option.textContent = r;
+      select.appendChild(option);
+    });
+    label.appendChild(select);
+    objetivoContainer.appendChild(label);
+  }
+  else if(tipo === "cuantos_llegan") {
+    const label = document.createElement("label");
+    label.textContent = "Selecciona cuántos llegan:";
+    const select = document.createElement("select");
+    select.name = "cantidadLlegan";
+    [1,2,3,4,5].forEach(n => {
+      const option = document.createElement("option");
+      option.value = n;
+      option.textContent = n;
+      select.appendChild(option);
+    });
+    label.appendChild(select);
     objetivoContainer.appendChild(label);
   }
 }
 
-// Inicializar
+// Inicializar formulario
 actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
 
@@ -154,12 +184,14 @@ document.getElementById("apuestaForm").addEventListener("submit", async (e) => {
   const tipo = form.tipo.value;
   let objetivo;
 
-  if (tipo === "posicion") {
+  if(tipo === "posicion") {
     objetivo = { nombre: form.caracol.value, posicion: parseInt(form.posicion.value) };
-  } else if (tipo === "primer_movimiento" || tipo === "primer_salida") {
+  } else if(tipo === "primer_movimiento" || tipo === "primer_salida") {
     objetivo = form.caracol.value;
-  } else if (tipo === "tiempo") {
-    objetivo = { nombre: form.nombre.value, tiempoMax: parseInt(form.tiempoMax.value) };
+  } else if(tipo === "tiempo") {
+    objetivo = form.tiempo.value;
+  } else if(tipo === "cuantos_llegan") {
+    objetivo = parseInt(form.cantidadLlegan.value);
   }
 
   const data = {
@@ -220,5 +252,3 @@ document.getElementById("refreshApuestas").addEventListener("click", async () =>
 
 </body>
 </html>
-
-
