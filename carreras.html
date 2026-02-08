@@ -10,19 +10,22 @@ nav { background: #333; display: flex; justify-content: center; }
 nav a { color: white; text-decoration: none; padding: 10px 20px; }
 nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
 main { margin: 20px; }
-fieldset { margin-bottom: 20px; padding: 10px; }
-pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+fieldset { margin-bottom: 20px; padding: 10px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; border-radius:5px; }
 label { display:block; margin-bottom:10px; }
 select { padding:5px; font-size:16px; }
 .video-container { margin: 20px 0; }
 .video-container iframe { width: 100%; height: 315px; }
+.socials { display:flex; gap:15px; justify-content:center; margin-top:20px; }
+.socials a { text-decoration:none; color:#333; font-weight:bold; padding:8px 12px; background:#eee; border-radius:5px; }
+.socials a:hover { background:#4CAF50; color:white; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>🏁 Carreras - Bichos a la fuga</h1>
-  <p>Mira las carreras en directo o consulta videos explicativos</p>
+  <p>Mira las carreras o consulta videos explicativos</p>
 </header>
 
 <nav>
@@ -54,22 +57,41 @@ select { padding:5px; font-size:16px; }
   <iframe id="videoExplicativo" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo de la carrera" frameborder="0" allowfullscreen></iframe>
 </div>
 
-<h2>Ver la carrera en directo</h2>
-<div class="video-container">
-  <iframe id="videoDirecto" src="https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig" title="Carrera en directo" frameborder="0" allowfullscreen></iframe>
-</div>
-
 <fieldset>
-  <legend>Resultados de la carrera</legend>
+  <legend>Resultados y datos para apostar</legend>
   <pre id="resultadosCarrera">Selecciona una carrera para ver los resultados o estado.</pre>
 </fieldset>
 
+<div class="socials">
+  <a href="https://www.instagram.com/tu_canal" target="_blank">Instagram</a>
+  <a href="https://www.tiktok.com/@tu_canal" target="_blank">TikTok</a>
+  <a href="https://www.youtube.com/@tu_canal" target="_blank">YouTube</a>
+</div>
+
 <script>
-// Resultados definitivos de las carreras que ya se han corrido
+// Datos de apuestas disponibles
 const resultadosDefinitivos = {
-  1: [ {nombre:"Toreto", tiempo:"5s", posicion:1}, {nombre:"Sinhuellas", tiempo:"6s", posicion:2}, {nombre:"Gari", tiempo:"7s", posicion:3}, {nombre:"Arrastrado", tiempo:"8s", posicion:3}, {nombre:"Babosa Flash", tiempo:"9s", posicion:3} ],
-  2: [ {nombre:"Sinhuellas", tiempo:"5s", posicion:1}, {nombre:"Toreto", tiempo:"6s", posicion:2}, {nombre:"Gari", tiempo:"7s", posicion:3} ],
-  3: [ {nombre:"Gari", tiempo:"5s", posicion:1}, {nombre:"Sinhuellas", tiempo:"6s", posicion:2}, {nombre:"Toreto", tiempo:"7s", posicion:3} ]
+  1: { 
+      posicion:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"],
+      primer_movimiento:"Sinhuellas",
+      primer_salida:"Toreto",
+      tiempo:"10-20",
+      cuantos_llegan:5
+  },
+  2: { 
+      posicion:["Sinhuellas","Toreto","Gari","Arrastrado","Baboso Flash"],
+      primer_movimiento:"Toreto",
+      primer_salida:"Gari",
+      tiempo:"5-15",
+      cuantos_llegan:4
+  },
+  3: { 
+      posicion:["Gari","Sinhuellas","Toreto","Arrastrado","Baboso Flash"],
+      primer_movimiento:"Gari",
+      primer_salida:"Arrastrado",
+      tiempo:"7-17",
+      cuantos_llegan:5
+  }
   // Carreras 4 a 8 aún no se han corrido
 };
 
@@ -85,26 +107,35 @@ const videosExplicativos = {
   8: "https://www.youtube.com/embed/9bZkp7q19f0"
 };
 
-// Función para mostrar resultados
+// Mostrar resultados y datos de apuesta
 function mostrarResultados() {
   const carreraId = document.getElementById("selectCarrera").value;
   document.getElementById("videoExplicativo").src = videosExplicativos[carreraId];
 
-  if(resultadosDefinitivos[carreraId]) {
-    const resultados = resultadosDefinitivos[carreraId];
-    document.getElementById("resultadosCarrera").innerText =
-      resultados.map(r=>`Posición ${r.posicion}: ${r.nombre} - Tiempo: ${r.tiempo}`).join("\n");
+  const resultados = resultadosDefinitivos[carreraId];
+  const pre = document.getElementById("resultadosCarrera");
+
+  if(resultados){
+    pre.innerText = `
+Datos disponibles para apostar:
+
+- Posiciones finales: ${resultados.posicion.join(", ")}
+- Primer en moverse: ${resultados.primer_movimiento}
+- Primer en salirse: ${resultados.primer_salida}
+- Tiempo de llegada: ${resultados.tiempo}
+- Cuántos llegan: ${resultados.cuantos_llegan}
+    `;
   } else {
-    document.getElementById("resultadosCarrera").innerText = "⚠️ Carrera aún no realizada. Resultados disponibles después de la carrera.";
+    pre.innerText = "⚠️ Carrera aún no realizada. Los datos de apuestas estarán disponibles después de la carrera.";
   }
 }
 
-// Actualizar al cambiar de carrera
 document.getElementById("selectCarrera").addEventListener("change", mostrarResultados);
 
 // Inicializa con la primera carrera
 mostrarResultados();
 </script>
+
 </main>
 </body>
 </html>
