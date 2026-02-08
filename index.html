@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Bichos a la fuga</title>
-  <style>
-    body { font-family: sans-serif; margin: 20px; }
-    fieldset { margin-bottom: 20px; padding: 10px; }
-    label { display: block; margin: 5px 0; }
-    button { margin-top: 10px; }
-    pre { background: #f0f0f0; padding: 10px; }
-  </style>
+<meta charset="UTF-8">
+<title>Bichos a la fuga</title>
+<style>
+  body { font-family: sans-serif; margin: 20px; }
+  fieldset { margin-bottom: 20px; padding: 10px; }
+  label { display: block; margin: 5px 0; }
+  button { margin-top: 10px; }
+  pre { background: #f0f0f0; padding: 10px; }
+</style>
 </head>
 <body>
 
@@ -26,16 +26,20 @@
     <legend>Apostar</legend>
     <form id="apuestaForm">
       <label>Usuario ID: <input type="number" name="usuarioId" required></label>
-      <label>Carrera ID: <input type="number" name="carreraId" required></label>
+      <label>Carrera ID: <input type="number" name="carreraId" value="1" required></label>
       <label>Tipo de apuesta:
-        <select name="tipo" required>
+        <select name="tipo" id="tipoApuesta" required>
           <option value="posicion">Posición final</option>
           <option value="primer_movimiento">Primer en moverse</option>
           <option value="primer_salida">Primer en salirse</option>
           <option value="tiempo">Tiempo de llegada</option>
         </select>
       </label>
-      <label>Objetivo (nombre del caracol o número según tipo): <input type="text" name="objetivo" required></label>
+
+      <div id="objetivoContainer">
+        <!-- Aquí se generará dinámicamente el input según tipo -->
+      </div>
+
       <label>Cantidad de babosas: <input type="number" name="cantidad" required></label>
       <button type="submit">Apostar</button>
     </form>
@@ -66,7 +70,6 @@
     <button id="refreshApuestas">Actualizar Apuestas</button>
     <pre id="historial"></pre>
   </fieldset>
-
 </main>
 
 <footer>
@@ -75,24 +78,88 @@
 
 <script>
 const API = "http://localhost:3000";
+let participantes = ["Rápido Slim", "Lento pero Seguro", "Turbo Baba"]; // Opciones de la carrera
 
-// FORMULARIO DE APUESTAS
+const objetivoContainer = document.getElementById("objetivoContainer");
+const tipoApuesta = document.getElementById("tipoApuesta");
+
+// Función para actualizar los inputs según tipo de apuesta
+function actualizarObjetivoInput() {
+  const tipo = tipoApuesta.value;
+  objetivoContainer.innerHTML = "";
+
+  if (tipo === "posicion") {
+    const label = document.createElement("label");
+    label.textContent = "Selecciona caracol y posición:";
+    const selectCaracol = document.createElement("select");
+    selectCaracol.name = "caracol";
+    participantes.forEach(p => {
+      const option = document.createElement("option");
+      option.value = p;
+      option.textContent = p;
+      selectCaracol.appendChild(option);
+    });
+    const selectPos = document.createElement("select");
+    selectPos.name = "posicion";
+    [1,2,3].forEach(n => {
+      const option = document.createElement("option");
+      option.value = n;
+      option.textContent = n;
+      selectPos.appendChild(option);
+    });
+    label.appendChild(selectCaracol);
+    label.appendChild(selectPos);
+    objetivoContainer.appendChild(label);
+  }
+  else if (tipo === "primer_movimiento" || tipo === "primer_salida") {
+    const label = document.createElement("label");
+    label.textContent = "Selecciona caracol:";
+    const select = document.createElement("select");
+    select.name = "caracol";
+    participantes.forEach(p => {
+      const option = document.createElement("option");
+      option.value = p;
+      option.textContent = p;
+      select.appendChild(option);
+    });
+    label.appendChild(select);
+    objetivoContainer.appendChild(label);
+  }
+  else if (tipo === "tiempo") {
+    const label = document.createElement("label");
+    label.textContent = "Caracol y tiempo máximo (minutos, hasta 30):";
+    const inputNombre = document.createElement("input");
+    inputNombre.name = "nombre";
+    inputNombre.placeholder = "Nombre del caracol";
+    const inputTiempo = document.createElement("input");
+    inputTiempo.name = "tiempoMax";
+    inputTiempo.type = "number";
+    inputTiempo.min = 1;
+    inputTiempo.max = 30;
+    inputTiempo.placeholder = "Tiempo máximo";
+    label.appendChild(inputNombre);
+    label.appendChild(inputTiempo);
+    objetivoContainer.appendChild(label);
+  }
+}
+
+// Inicializar
+actualizarObjetivoInput();
+tipoApuesta.addEventListener("change", actualizarObjetivoInput);
+
+// Enviar apuesta
 document.getElementById("apuestaForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const form = e.target;
   const tipo = form.tipo.value;
   let objetivo;
 
-  // Adaptar input a tipo de apuesta
-  if (tipo === "posicion" || tipo === "tiempo") {
-    // Convertir a número
-    objetivo = isNaN(parseInt(form.objetivo.value)) ? form.objetivo.value : parseInt(form.objetivo.value);
-    if (tipo === "tiempo") {
-      // Para tiempo necesitamos un objeto con nombre y tiempoMax
-      objetivo = { nombre: form.objetivo.value.split(",")[0].trim(), tiempoMax: parseInt(form.objetivo.value.split(",")[1]) };
-    }
-  } else {
-    objetivo = form.objetivo.value;
+  if (tipo === "posicion") {
+    objetivo = { nombre: form.caracol.value, posicion: parseInt(form.posicion.value) };
+  } else if (tipo === "primer_movimiento" || tipo === "primer_salida") {
+    objetivo = form.caracol.value;
+  } else if (tipo === "tiempo") {
+    objetivo = { nombre: form.nombre.value, tiempoMax: parseInt(form.tiempoMax.value) };
   }
 
   const data = {
@@ -104,8 +171,8 @@ document.getElementById("apuestaForm").addEventListener("submit", async (e) => {
   };
 
   const res = await fetch(`${API}/apostar`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
     body: JSON.stringify(data)
   });
   const json = await res.json();
@@ -153,4 +220,5 @@ document.getElementById("refreshApuestas").addEventListener("click", async () =>
 
 </body>
 </html>
+
 
