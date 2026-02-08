@@ -20,7 +20,15 @@
 
   <a class="btn" href="carrera.html">Entrar a la carrera</a>
 </main>
-
+  
+<script>
+fetch("https://bichos-backend.onrender.com/ranking")
+  .then(res => res.json())
+  .then(data => {
+    console.log("Ranking:", data);
+  });
+</script>
+  
 <footer>
   <p>
     Juego privado · Moneda ficticia · Sin pagos ni premios reales
