@@ -10,6 +10,8 @@ pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
 nav { background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px; }
 nav a { color:white; text-decoration:none; padding:10px 20px; }
 nav a:hover { background-color:#4CAF50; border-radius:5px; }
+button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
+button:hover { background-color:#45a049; }
 </style>
 </head>
 <body>
@@ -71,20 +73,17 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
 </fieldset>
 
 <script>
-// Nombres válidos de usuarios
+// --- Configuración inicial ---
 const jugadores = ["Toreto","Sinhuellas","Gari"];
+let ranking = [0,0,0]; // lechuguines acumulados
+const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"];
+let babosasCarreras = [100,100,100,100,100,100,100,100]; // 8 carreras
 
-// Ranking: lechuguines acumulados por jugador (índice corresponde a jugadores)
-let ranking = [0,0,0];
-
-// Participantes de la carrera
-const participantes = ["Toreto01","Sinhuellas12","Tro Gari24","Arrastrado57","Baboso Flash90"];
-
-// Contenedor de inputs dinámicos
+// Contenedor inputs dinámicos
 const objetivoContainer = document.getElementById("objetivoContainer");
 const tipoApuesta = document.getElementById("tipoApuesta");
 
-// Función para mostrar inputs según tipo de apuesta
+// --- Función para inputs según tipo de apuesta ---
 function actualizarObjetivoInput(){
   const tipo = tipoApuesta.value;
   objetivoContainer.innerHTML = "";
@@ -115,39 +114,49 @@ function actualizarObjetivoInput(){
 actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
 
-// Mostrar ranking con nombres
+// --- Mostrar ranking ---
 function mostrarRanking(){
-  const copia = ranking.map((lech, i)=>({nombre: jugadores[i], lech}));
+  const copia = ranking.map((lech,i)=>({nombre:jugadores[i], lech}));
   copia.sort((a,b)=>b.lech - a.lech);
   document.getElementById("ranking").innerText = copia.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
 }
 
-// Evento submit
+// --- Evento submit ---
 document.getElementById("apuestaForm").addEventListener("submit",(e)=>{
   e.preventDefault();
   const form = e.target;
   const nombreUsuario = form.usuario.value.trim();
 
-  // Validar usuario
+  // Validar nombre
   const indiceJugador = jugadores.indexOf(nombreUsuario);
   if(indiceJugador === -1){
     alert("Nombre de usuario no válido. Debe ser uno de los jugadores predefinidos.");
     return;
   }
 
+  const carrera = parseInt(form.carrera.value)-1;
   const cantidad = parseInt(form.cantidad.value);
   const tipo = form.tipo.value;
 
+  // Validar babosas disponibles
+  if(cantidad > babosasCarreras[carrera]){
+    alert(`No quedan suficientes babosas para esta carrera. Restantes: ${babosasCarreras[carrera]}`);
+    return;
+  }
+
   // Ganancia simulada
-  const ganancia = cantidad * (tipo === "posicion" ? 2 : 3);
+  const ganancia = cantidad * (tipo==="posicion"?2:3);
+
+  // Restar babosas
+  babosasCarreras[carrera] -= cantidad;
 
   // Sumar al ranking
   ranking[indiceJugador] += ganancia;
 
-  // Mensaje
-  document.getElementById("apuestaResult").innerText = `Apuesta realizada.\nGanancia: ${ganancia} lechuguines`;
+  document.getElementById("apuestaResult").innerText = 
+    `Apuesta realizada.\nGanancia: ${ganancia} lechuguines\nBabosas restantes en carrera: ${babosasCarreras[carrera]}`;
 
-  // Actualizar ranking automáticamente
+  // Actualizar ranking
   mostrarRanking();
 });
 
@@ -158,4 +167,3 @@ mostrarRanking();
 </main>
 </body>
 </html>
-
