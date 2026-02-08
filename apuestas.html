@@ -12,6 +12,9 @@ nav a { color:white; text-decoration:none; padding:10px 20px; }
 nav a:hover { background-color:#4CAF50; border-radius:5px; }
 button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
 button:hover { background-color:#45a049; }
+.apuesta-item { border:1px solid #ccc; padding:10px; margin:5px 0; border-radius:5px; background:#fafafa; }
+.apuesta-item button { margin-left:10px; background:#e53935; }
+.apuesta-item button:hover { background:#d32f2f; }
 </style>
 </head>
 <body>
@@ -68,6 +71,11 @@ button:hover { background-color:#45a049; }
 </fieldset>
 
 <fieldset>
+  <legend>Apuestas activas</legend>
+  <div id="apuestasActivas">Cargando...</div>
+</fieldset>
+
+<fieldset>
   <legend>Ranking actual</legend>
   <pre id="ranking">Cargando...</pre>
   <button id="refreshRanking">Actualizar ranking</button>
@@ -79,7 +87,7 @@ const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Fla
 const tipoApuesta = document.getElementById("tipoApuesta");
 const objetivoContainer = document.getElementById("objetivoContainer");
 
-// --- Función para crear inputs según tipo de apuesta ---
+// --- Inputs dinámicos según tipo de apuesta ---
 function actualizarObjetivoInput(){
   const tipo = tipoApuesta.value;
   objetivoContainer.innerHTML = "";
@@ -119,17 +127,45 @@ function actualizarObjetivoInput(){
     objetivoContainer.appendChild(label);
   }
 }
-
 actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
 
-// --- Enviar apuesta al backend ---
+// --- Funciones para manejar apuestas ---
+async function cargarApuestas(){
+  try{
+    const res = await fetch("http://localhost:3000/apuestas");
+    const data = await res.json();
+    const container = document.getElementById("apuestasActivas");
+    container.innerHTML = "";
+    if(data.length===0){ container.innerText="No hay apuestas activas."; return; }
+
+    data.forEach((a, i)=>{
+      const div = document.createElement("div");
+      div.className = "apuesta-item";
+      div.innerHTML = `
+        Usuario: ${a.usuario} | Carrera: ${a.carrera} | Tipo: ${a.tipo} | Cantidad: ${a.cantidad} <br>
+        Objetivo: ${JSON.stringify(a.objetivo)}
+      `;
+      const btnBorrar = document.createElement("button");
+      btnBorrar.textContent="Borrar";
+      btnBorrar.onclick = async () => {
+        if(!confirm("¿Eliminar esta apuesta?")) return;
+        await fetch(`http://localhost:3000/apuesta/${i}`, { method:"DELETE" });
+        cargarApuestas();
+      };
+      div.appendChild(btnBorrar);
+      container.appendChild(div);
+    });
+  } catch(err){ console.error(err); }
+}
+
+// --- Enviar apuesta ---
 document.getElementById("apuestaForm").addEventListener("submit", async e=>{
   e.preventDefault();
   const form = e.target;
   const usuario = form.usuario.value.trim();
   if(!usuariosPermitidos.includes(usuario)){
-    alert("Usuario no válido. Debe ser uno de los predefinidos.");
+    alert("Usuario no válido.");
     return;
   }
 
@@ -140,7 +176,6 @@ document.getElementById("apuestaForm").addEventListener("submit", async e=>{
     cantidad: parseInt(form.cantidad.value),
     objetivo: null
   };
-
   if(data.tipo==="posicion") data.objetivo={nombre:form.caracol.value,posicion:parseInt(form.posicion.value)};
   else if(data.tipo==="primer_movimiento"||data.tipo==="primer_salida") data.objetivo=form.caracol.value;
   else if(data.tipo==="tiempo") data.objetivo=form.tiempo.value;
@@ -153,33 +188,26 @@ document.getElementById("apuestaForm").addEventListener("submit", async e=>{
       body: JSON.stringify(data)
     });
     const json = await res.json();
-    if(json.error) alert(json.error);
-    else document.getElementById("apuestaResult").innerText = `Apuesta registrada.\nBabosas restantes: ${json.babosasRestantes}`;
-  } catch(err){
-    console.error(err);
-    alert("Error al enviar la apuesta.");
-  }
-
-  actualizarRanking();
+    document.getElementById("apuestaResult").innerText=`Apuesta registrada. Babosas restantes: ${json.babosasRestantes}`;
+    cargarApuestas();
+    actualizarRanking();
+  } catch(err){ console.error(err); alert("Error al enviar la apuesta."); }
 });
 
-// --- Obtener ranking ---
+// --- Ranking ---
 async function actualizarRanking(){
   try{
     const res = await fetch("http://localhost:3000/ranking");
     const data = await res.json();
     document.getElementById("ranking").innerText = data.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
-  } catch(err){
-    console.error(err);
-    document.getElementById("ranking").innerText = "Error al cargar ranking";
-  }
+  } catch(err){ console.error(err); document.getElementById("ranking").innerText="Error al cargar ranking"; }
 }
 
 document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
 actualizarRanking();
+cargarApuestas();
 </script>
 
 </main>
 </body>
 </html>
-
