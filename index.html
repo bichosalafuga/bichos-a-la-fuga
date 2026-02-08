@@ -34,6 +34,26 @@ fetch("https://bichos-backend.onrender.com/ranking")
     Juego privado · Moneda ficticia · Sin pagos ni premios reales
   </p>
 </footer>
+<h2>🏆 Ranking de la temporada</h2>
+<ul id="ranking"></ul>
+
+<script>
+fetch("https://bichos-backend.onrender.com/ranking")
+  .then(response => response.json())
+  .then(data => {
+    const lista = document.getElementById("ranking");
+    lista.innerHTML = "";
+
+    data.forEach((usuario, index) => {
+      const li = document.createElement("li");
+      li.textContent = `${index + 1}. ${usuario.nombre} — 🥬 ${usuario.lechuguines}`;
+      lista.appendChild(li);
+    });
+  })
+  .catch(error => {
+    console.error("Error conectando con backend:", error);
+  });
+</script>
 
 </body>
 </html>
