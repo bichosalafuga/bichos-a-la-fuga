@@ -7,30 +7,31 @@
 body { font-family:sans-serif; margin:20px; }
 fieldset { margin-bottom:20px; padding:10px; }
 pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
+nav { background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px; }
+nav a { color:white; text-decoration:none; padding:10px 20px; }
+nav a:hover { background-color:#4CAF50; border-radius:5px; }
 </style>
 </head>
 <body>
+
 <header>
 <h1>🐌 Apostar en Bichos a la fuga</h1>
 </header>
-<!-- MENÚ DE NAVEGACIÓN COMÚN -->
-<nav style="background:#333; display:flex; justify-content:center; padding:10px;">
-  <a href="index.html" style="color:white; text-decoration:none; padding:10px 20px;">Inicio</a>
-  <a href="apuestas.html" style="color:white; text-decoration:none; padding:10px 20px;">Apuestas</a>
-  <a href="carreras.html" style="color:white; text-decoration:none; padding:10px 20px;">Carreras</a>
-  <a href="corredores.html" style="color:white; text-decoration:none; padding:10px 20px;">Corredores</a>
+
+<nav>
+  <a href="index.html">Inicio</a>
+  <a href="apuestas.html">Apuestas</a>
+  <a href="carreras.html">Carreras</a>
+  <a href="corredores.html">Corredores</a>
 </nav>
 
 <main>
+
 <fieldset>
   <legend>Apostar</legend>
   <form id="apuestaForm">
-    <label>Usuario:
-      <select name="usuario" required>
-        <option value="Toreto">Toreto</option>
-        <option value="Sinhuellas">Sinhuellas</option>
-        <option value="Gari">Gari</option>
-      </select>
+    <label>Nombre de usuario:
+      <input type="text" name="usuario" placeholder="Escribe tu nombre" required>
     </label>
 
     <label>Carrera:
@@ -64,36 +65,49 @@ pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
   <pre id="apuestaResult"></pre>
 </fieldset>
 
+<fieldset>
+  <legend>Ranking actual</legend>
+  <pre id="ranking">Cargando...</pre>
+</fieldset>
+
 <script>
+// Nombres válidos de usuarios
+const jugadores = ["Toreto","Sinhuellas","Gari"];
+
+// Ranking: lechuguines acumulados por jugador (índice corresponde a jugadores)
+let ranking = [0,0,0];
+
+// Participantes de la carrera
 const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"];
-let apuestas = [];
 
-const objetivoContainer=document.getElementById("objetivoContainer");
-const tipoApuesta=document.getElementById("tipoApuesta");
+// Contenedor de inputs dinámicos
+const objetivoContainer = document.getElementById("objetivoContainer");
+const tipoApuesta = document.getElementById("tipoApuesta");
 
+// Función para mostrar inputs según tipo de apuesta
 function actualizarObjetivoInput(){
-  const tipo=tipoApuesta.value;
-  objetivoContainer.innerHTML="";
-  if(tipo==="posicion"){
-    const label=document.createElement("label"); label.textContent="Selecciona caracol y posición:";
-    const selectCaracol=document.createElement("select"); selectCaracol.name="caracol";
+  const tipo = tipoApuesta.value;
+  objetivoContainer.innerHTML = "";
+  if(tipo === "posicion"){
+    const label = document.createElement("label"); label.textContent = "Selecciona caracol y posición:";
+    const selectCaracol = document.createElement("select"); selectCaracol.name="caracol";
     participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selectCaracol.appendChild(opt); });
-    const selectPos=document.createElement("select"); selectPos.name="posicion";
+    const selectPos = document.createElement("select"); selectPos.name="posicion";
     [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; selectPos.appendChild(opt); });
     label.appendChild(selectCaracol); label.appendChild(selectPos); objetivoContainer.appendChild(label);
-  } else if(tipo==="primer_movimiento"||tipo==="primer_salida"){
-    const label=document.createElement("label"); label.textContent="Selecciona caracol:";
-    const select=document.createElement("select"); select.name="caracol";
+  } else if(tipo==="primer_movimiento" || tipo==="primer_salida"){
+    const label = document.createElement("label"); label.textContent="Selecciona caracol:";
+    const select = document.createElement("select"); select.name="caracol";
     participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; select.appendChild(opt); });
     label.appendChild(select); objetivoContainer.appendChild(label);
   } else if(tipo==="tiempo"){
-    const label=document.createElement("label"); label.textContent="Selecciona rango de tiempo:";
-    const select=document.createElement("select"); select.name="tiempo";
+    const label = document.createElement("label"); label.textContent="Selecciona rango de tiempo:";
+    const select = document.createElement("select"); select.name="tiempo";
     ["0-10","10-20","20-30"].forEach(r=>{ const opt=document.createElement("option"); opt.value=r; opt.textContent=r; select.appendChild(opt); });
     label.appendChild(select); objetivoContainer.appendChild(label);
   } else if(tipo==="cuantos_llegan"){
-    const label=document.createElement("label"); label.textContent="Selecciona cuántos llegan:";
-    const select=document.createElement("select"); select.name="cantidadLlegan";
+    const label = document.createElement("label"); label.textContent="Selecciona cuántos llegan:";
+    const select = document.createElement("select"); select.name="cantidadLlegan";
     [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; select.appendChild(opt); });
     label.appendChild(select); objetivoContainer.appendChild(label);
   }
@@ -101,19 +115,47 @@ function actualizarObjetivoInput(){
 actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
 
+// Mostrar ranking con nombres
+function mostrarRanking(){
+  const copia = ranking.map((lech, i)=>({nombre: jugadores[i], lech}));
+  copia.sort((a,b)=>b.lech - a.lech);
+  document.getElementById("ranking").innerText = copia.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
+}
+
+// Evento submit
 document.getElementById("apuestaForm").addEventListener("submit",(e)=>{
   e.preventDefault();
-  const form=e.target;
-  let objetivo=null;
-  const tipo=form.tipo.value;
-  if(tipo==="posicion") objetivo={nombre:form.caracol.value,posicion:parseInt(form.posicion.value)};
-  else if(tipo==="primer_movimiento"||tipo==="primer_salida") objetivo=form.caracol.value;
-  else if(tipo==="tiempo") objetivo=form.tiempo.value;
-  else if(tipo==="cuantos_llegan") objetivo=parseInt(form.cantidadLlegan.value);
+  const form = e.target;
+  const nombreUsuario = form.usuario.value.trim();
 
-  apuestas.push({usuario:form.usuario.value,carrera:form.carrera.value,tipo,objetivo,cantidad:parseInt(form.cantidad.value)});
-  document.getElementById("apuestaResult").innerText=JSON.stringify(apuestas,null,2);
+  // Validar usuario
+  const indiceJugador = jugadores.indexOf(nombreUsuario);
+  if(indiceJugador === -1){
+    alert("Nombre de usuario no válido. Debe ser uno de los jugadores predefinidos.");
+    return;
+  }
+
+  const cantidad = parseInt(form.cantidad.value);
+  const tipo = form.tipo.value;
+
+  // Ganancia simulada
+  const ganancia = cantidad * (tipo === "posicion" ? 2 : 3);
+
+  // Sumar al ranking
+  ranking[indiceJugador] += ganancia;
+
+  // Mensaje
+  document.getElementById("apuestaResult").innerText = `Apuesta realizada.\nGanancia: ${ganancia} lechuguines`;
+
+  // Actualizar ranking automáticamente
+  mostrarRanking();
 });
+
+// Inicializar ranking
+mostrarRanking();
 </script>
+
+</main>
 </body>
 </html>
+
