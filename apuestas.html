@@ -4,17 +4,19 @@
 <meta charset="UTF-8">
 <title>Bichos a la fuga - Apostar</title>
 <style>
-body { font-family:sans-serif; margin:20px; }
-fieldset { margin-bottom:20px; padding:10px; }
-pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
+body { font-family:sans-serif; margin:20px; background:#f8f8f8; }
+fieldset { margin-bottom:20px; padding:15px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; border-radius:5px; }
 nav { background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px; }
 nav a { color:white; text-decoration:none; padding:10px 20px; }
 nav a:hover { background-color:#4CAF50; border-radius:5px; }
 button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
 button:hover { background-color:#45a049; }
-.apuesta-item { border:1px solid #ccc; padding:10px; margin:5px 0; border-radius:5px; background:#fafafa; }
-.apuesta-item button { margin-left:10px; background:#e53935; }
-.apuesta-item button:hover { background:#d32f2f; }
+label { display:block; margin-bottom:10px; }
+select,input { padding:5px; font-size:16px; margin-top:5px; }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th,td { border:1px solid #ccc; padding:8px; text-align:center; }
+th { background:#eee; }
 </style>
 </head>
 <body>
@@ -33,7 +35,7 @@ button:hover { background-color:#45a049; }
 <main>
 
 <fieldset>
-  <legend>Apostar</legend>
+  <legend>Registrar apuesta</legend>
   <form id="apuestaForm">
     <label>Nombre de usuario:
       <input type="text" name="usuario" placeholder="Escribe tu nombre" required>
@@ -72,7 +74,19 @@ button:hover { background-color:#45a049; }
 
 <fieldset>
   <legend>Apuestas activas</legend>
-  <div id="apuestasActivas">Cargando...</div>
+  <table id="apuestasTable">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Carrera</th>
+        <th>Tipo</th>
+        <th>Objetivo</th>
+        <th>Babosas</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </fieldset>
 
 <fieldset>
@@ -87,111 +101,128 @@ const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Fla
 const tipoApuesta = document.getElementById("tipoApuesta");
 const objetivoContainer = document.getElementById("objetivoContainer");
 
-// --- Inputs dinámicos según tipo de apuesta ---
+// --- Inputs dinámicos ---
 function actualizarObjetivoInput(){
   const tipo = tipoApuesta.value;
-  objetivoContainer.innerHTML = "";
-
+  objetivoContainer.innerHTML="";
   if(tipo==="posicion"){
-    const label = document.createElement("label");
-    label.textContent="Selecciona caracol y posición:";
-    const selectCaracol = document.createElement("select"); selectCaracol.name="caracol";
-    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selectCaracol.appendChild(opt); });
-    const selectPos = document.createElement("select"); selectPos.name="posicion";
-    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; selectPos.appendChild(opt); });
-    label.appendChild(selectCaracol); label.appendChild(selectPos);
+    const label=document.createElement("label"); label.textContent="Selecciona caracol y posición:";
+    const selC=document.createElement("select"); selC.name="caracol";
+    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selC.appendChild(opt); });
+    const selP=document.createElement("select"); selP.name="posicion";
+    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; selP.appendChild(opt); });
+    label.appendChild(selC); label.appendChild(selP);
     objetivoContainer.appendChild(label);
-  }
-  else if(tipo==="primer_movimiento" || tipo==="primer_salida"){
-    const label = document.createElement("label");
-    label.textContent="Selecciona caracol:";
-    const select = document.createElement("select"); select.name="caracol";
-    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; select.appendChild(opt); });
-    label.appendChild(select);
-    objetivoContainer.appendChild(label);
-  }
-  else if(tipo==="tiempo"){
-    const label = document.createElement("label");
-    label.textContent="Selecciona rango de tiempo:";
-    const select = document.createElement("select"); select.name="tiempo";
-    ["0-10","10-20","20-30"].forEach(r=>{ const opt=document.createElement("option"); opt.value=r; opt.textContent=r; select.appendChild(opt); });
-    label.appendChild(select);
-    objetivoContainer.appendChild(label);
-  }
-  else if(tipo==="cuantos_llegan"){
-    const label = document.createElement("label");
-    label.textContent="Selecciona cuántos llegan:";
-    const select = document.createElement("select"); select.name="cantidadLlegan";
-    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; select.appendChild(opt); });
-    label.appendChild(select);
-    objetivoContainer.appendChild(label);
+  } else if(tipo==="primer_movimiento"||tipo==="primer_salida"){
+    const label=document.createElement("label"); label.textContent="Selecciona caracol:";
+    const sel=document.createElement("select"); sel.name="caracol";
+    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; sel.appendChild(opt); });
+    label.appendChild(sel); objetivoContainer.appendChild(label);
+  } else if(tipo==="tiempo"){
+    const label=document.createElement("label"); label.textContent="Selecciona rango de tiempo:";
+    const sel=document.createElement("select"); sel.name="tiempo";
+    ["0-10","10-20","20-30"].forEach(r=>{ const opt=document.createElement("option"); opt.value=r; opt.textContent=r; sel.appendChild(opt); });
+    label.appendChild(sel); objetivoContainer.appendChild(label);
+  } else if(tipo==="cuantos_llegan"){
+    const label=document.createElement("label"); label.textContent="Selecciona cuántos llegan:";
+    const sel=document.createElement("select"); sel.name="cantidadLlegan";
+    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; sel.appendChild(opt); });
+    label.appendChild(sel); objetivoContainer.appendChild(label);
   }
 }
-actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
+actualizarObjetivoInput();
 
-// --- Funciones para manejar apuestas ---
+// --- Funciones API ---
 async function cargarApuestas(){
   try{
     const res = await fetch("http://localhost:3000/apuestas");
     const data = await res.json();
-    const container = document.getElementById("apuestasActivas");
-    container.innerHTML = "";
-    if(data.length===0){ container.innerText="No hay apuestas activas."; return; }
-
-    data.forEach((a, i)=>{
-      const div = document.createElement("div");
-      div.className = "apuesta-item";
-      div.innerHTML = `
-        Usuario: ${a.usuario} | Carrera: ${a.carrera} | Tipo: ${a.tipo} | Cantidad: ${a.cantidad} <br>
-        Objetivo: ${JSON.stringify(a.objetivo)}
-      `;
-      const btnBorrar = document.createElement("button");
-      btnBorrar.textContent="Borrar";
-      btnBorrar.onclick = async () => {
-        if(!confirm("¿Eliminar esta apuesta?")) return;
-        await fetch(`http://localhost:3000/apuesta/${i}`, { method:"DELETE" });
-        cargarApuestas();
-      };
-      div.appendChild(btnBorrar);
-      container.appendChild(div);
+    const tbody = document.querySelector("#apuestasTable tbody");
+    tbody.innerHTML="";
+    data.forEach((a,i)=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td>${a.usuario}</td>
+        <td>${a.carrera}</td>
+        <td>${a.tipo}</td>
+        <td>${JSON.stringify(a.objetivo)}</td>
+        <td>${a.cantidad}</td>
+        <td>
+          <button onclick="modificarApuesta(${i})">Editar</button>
+          <button onclick="borrarApuesta(${i})">Borrar</button>
+        </td>`;
+      tbody.appendChild(tr);
     });
-  } catch(err){ console.error(err); }
+  } catch(e){ console.error(e); }
 }
 
-// --- Enviar apuesta ---
+async function modificarApuesta(idx){
+  const res = await fetch("http://localhost:3000/apuestas");
+  const data = await res.json();
+  const apuesta = data[idx];
+  const form = document.getElementById("apuestaForm");
+
+  form.usuario.value = apuesta.usuario;
+  form.carrera.value = apuesta.carrera;
+  form.tipo.value = apuesta.tipo;
+  actualizarObjetivoInput();
+
+  // Rellenar objetivo según tipo
+  if(apuesta.tipo==="posicion"){
+    form.caracol.value = apuesta.objetivo.nombre;
+    form.posicion.value = apuesta.objetivo.posicion;
+  } else if(apuesta.tipo==="primer_movimiento"||apuesta.tipo==="primer_salida"){
+    form.caracol.value = apuesta.objetivo;
+  } else if(apuesta.tipo==="tiempo"){
+    form.tiempo.value = apuesta.objetivo;
+  } else if(apuesta.tipo==="cuantos_llegan"){
+    form.cantidadLlegan.value = apuesta.objetivo;
+  }
+
+  // Borrar la apuesta antigua
+  await borrarApuesta(idx);
+}
+
+async function borrarApuesta(idx){
+  const res = await fetch("http://localhost:3000/apuestas");
+  const data = await res.json();
+  data.splice(idx,1);
+
+  // Enviar arreglo actualizado al backend (simulación)
+  await fetch("http://localhost:3000/apuestas-update",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+
+  cargarApuestas();
+}
+
+// --- Registrar nueva apuesta ---
 document.getElementById("apuestaForm").addEventListener("submit", async e=>{
   e.preventDefault();
   const form = e.target;
   const usuario = form.usuario.value.trim();
-  if(!usuariosPermitidos.includes(usuario)){
-    alert("Usuario no válido.");
-    return;
-  }
+  if(!usuariosPermitidos.includes(usuario)){ alert("Usuario no válido"); return; }
 
-  const data = {
-    usuario,
-    carrera: parseInt(form.carrera.value),
-    tipo: form.tipo.value,
-    cantidad: parseInt(form.cantidad.value),
-    objetivo: null
-  };
+  const data={usuario,carrera:parseInt(form.carrera.value),tipo:form.tipo.value,cantidad:parseInt(form.cantidad.value),objetivo:null};
+
   if(data.tipo==="posicion") data.objetivo={nombre:form.caracol.value,posicion:parseInt(form.posicion.value)};
   else if(data.tipo==="primer_movimiento"||data.tipo==="primer_salida") data.objetivo=form.caracol.value;
   else if(data.tipo==="tiempo") data.objetivo=form.tiempo.value;
   else if(data.tipo==="cuantos_llegan") data.objetivo=parseInt(form.cantidadLlegan.value);
 
-  try {
-    const res = await fetch("http://localhost:3000/apuesta", {
+  try{
+    await fetch("http://localhost:3000/apuesta",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify(data)
+      body:JSON.stringify(data)
     });
-    const json = await res.json();
-    document.getElementById("apuestaResult").innerText=`Apuesta registrada. Babosas restantes: ${json.babosasRestantes}`;
+    document.getElementById("apuestaResult").innerText="Apuesta registrada correctamente.";
     cargarApuestas();
     actualizarRanking();
-  } catch(err){ console.error(err); alert("Error al enviar la apuesta."); }
+  }catch(e){ console.error(e); alert("Error al registrar apuesta."); }
 });
 
 // --- Ranking ---
@@ -200,14 +231,17 @@ async function actualizarRanking(){
     const res = await fetch("http://localhost:3000/ranking");
     const data = await res.json();
     document.getElementById("ranking").innerText = data.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
-  } catch(err){ console.error(err); document.getElementById("ranking").innerText="Error al cargar ranking"; }
+  } catch(e){ console.error(e); document.getElementById("ranking").innerText="Error al cargar ranking"; }
 }
 
 document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
-actualizarRanking();
+
+// Inicializar
 cargarApuestas();
+actualizarRanking();
 </script>
 
 </main>
 </body>
 </html>
+
