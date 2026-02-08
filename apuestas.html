@@ -12,11 +12,13 @@ nav a { color:white; text-decoration:none; padding:10px 20px; }
 nav a:hover { background-color:#4CAF50; border-radius:5px; }
 button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
 button:hover { background-color:#45a049; }
+button:disabled { background:#aaa; cursor:not-allowed; }
 label { display:block; margin-bottom:10px; }
 select,input { padding:5px; font-size:16px; margin-top:5px; }
 table { width:100%; border-collapse:collapse; margin-top:10px; }
 th,td { border:1px solid #ccc; padding:8px; text-align:center; }
 th { background:#eee; }
+h3 { margin-top:20px; }
 </style>
 </head>
 <body>
@@ -42,7 +44,7 @@ th { background:#eee; }
     </label>
 
     <label>Carrera:
-      <select name="carrera" required>
+      <select name="carrera" id="selectCarrera" required>
         <option value="1">Escalada Pegada</option>
         <option value="2">Desliz Extremo</option>
         <option value="3">Reto Baboso</option>
@@ -73,6 +75,11 @@ th { background:#eee; }
 </fieldset>
 
 <fieldset>
+  <legend>Datos de la carrera</legend>
+  <pre id="datosCarrera">Selecciona una carrera para ver los datos que afectan la apuesta.</pre>
+</fieldset>
+
+<fieldset>
   <legend>Apuestas activas</legend>
   <table id="apuestasTable">
     <thead>
@@ -96,27 +103,60 @@ th { background:#eee; }
 </fieldset>
 
 <script>
+// Usuarios permitidos
 const usuariosPermitidos = ["Junma01","Jony67","Jorge07"];
-const participantes = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
 const tipoApuesta = document.getElementById("tipoApuesta");
 const objetivoContainer = document.getElementById("objetivoContainer");
+const selectCarrera = document.getElementById("selectCarrera");
+const datosCarreraPre = document.getElementById("datosCarrera");
 
-// --- Inputs dinámicos ---
+// Carreras ya realizadas
+const carrerasRealizadas = [1,2,3];
+
+// Datos de carreras
+const datosCarreras = {
+  1:{participantes:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"], primer_movimiento:"Sinhuellas", primer_salida:"Toreto", tiempo:["5s","6s","7s","8s","9s"]},
+  2:{participantes:["Sinhuellas","Toreto","Gari","Arrastrado","Baboso Flash"], primer_movimiento:"Toreto", primer_salida:"Gari", tiempo:["5s","6s","7s","8s","9s"]},
+  3:{participantes:["Gari","Sinhuellas","Toreto","Arrastrado","Baboso Flash"], primer_movimiento:"Gari", primer_salida:"Arrastrado", tiempo:["5s","6s","7s","8s","9s"]},
+  4:{participantes:["Toreto","Gari","Sinhuellas","Arrastrado","Baboso Flash"], primer_movimiento:"Toreto", primer_salida:"Baboso Flash", tiempo:["5s","6s","7s","8s","9s"]},
+  5:{participantes:["Sinhuellas","Gari","Toreto","Arrastrado","Baboso Flash"], primer_movimiento:"Sinhuellas", primer_salida:"Toreto", tiempo:["5s","6s","7s","8s","9s"]},
+  6:{participantes:["Gari","Toreto","Sinhuellas","Arrastrado","Baboso Flash"], primer_movimiento:"Toreto", primer_salida:"Arrastrado", tiempo:["5s","6s","7s","8s","9s"]},
+  7:{participantes:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"], primer_movimiento:"Gari", primer_salida:"Baboso Flash", tiempo:["5s","6s","7s","8s","9s"]},
+  8:{participantes:["Baboso Flash","Toreto","Sinhuellas","Gari","Arrastrado"], primer_movimiento:"Baboso Flash", primer_salida:"Toreto", tiempo:["5s","6s","7s","8s","9s"]}
+};
+
+// Mostrar datos de carrera
+function mostrarDatosCarrera(){
+  const carrera = selectCarrera.value;
+  const datos = datosCarreras[carrera];
+  if(!datos) return;
+  let texto = `Participantes: ${datos.participantes.join(", ")}\n`;
+  texto += `Primer en moverse: ${datos.primer_movimiento}\n`;
+  texto += `Primer en salirse: ${datos.primer_salida}\n`;
+  texto += `Tiempos estimados: ${datos.tiempo.join(", ")}\n`;
+  datosCarreraPre.innerText = texto;
+}
+
+// Inputs dinámicos
 function actualizarObjetivoInput(){
   const tipo = tipoApuesta.value;
+  const carrera = selectCarrera.value;
+  const datos = datosCarreras[carrera];
+  if(!datos) return;
+
   objetivoContainer.innerHTML="";
   if(tipo==="posicion"){
     const label=document.createElement("label"); label.textContent="Selecciona caracol y posición:";
     const selC=document.createElement("select"); selC.name="caracol";
-    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selC.appendChild(opt); });
+    datos.participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selC.appendChild(opt); });
     const selP=document.createElement("select"); selP.name="posicion";
     [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; selP.appendChild(opt); });
     label.appendChild(selC); label.appendChild(selP);
     objetivoContainer.appendChild(label);
-  } else if(tipo==="primer_movimiento"||tipo==="primer_salida"){
+  } else if(tipo==="primer_movimiento" || tipo==="primer_salida"){
     const label=document.createElement("label"); label.textContent="Selecciona caracol:";
     const sel=document.createElement("select"); sel.name="caracol";
-    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; sel.appendChild(opt); });
+    datos.participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; sel.appendChild(opt); });
     label.appendChild(sel); objetivoContainer.appendChild(label);
   } else if(tipo==="tiempo"){
     const label=document.createElement("label"); label.textContent="Selecciona rango de tiempo:";
@@ -130,10 +170,20 @@ function actualizarObjetivoInput(){
     label.appendChild(sel); objetivoContainer.appendChild(label);
   }
 }
-tipoApuesta.addEventListener("change", actualizarObjetivoInput);
-actualizarObjetivoInput();
 
-// --- Funciones API ---
+// Listeners
+tipoApuesta.addEventListener("change", ()=>{
+  actualizarObjetivoInput();
+  mostrarDatosCarrera();
+});
+selectCarrera.addEventListener("change", ()=>{
+  actualizarObjetivoInput();
+  mostrarDatosCarrera();
+});
+actualizarObjetivoInput();
+mostrarDatosCarrera();
+
+// --- Cargar apuestas con bloqueo de carreras realizadas ---
 async function cargarApuestas(){
   try{
     const res = await fetch("http://localhost:3000/apuestas");
@@ -141,100 +191,80 @@ async function cargarApuestas(){
     const tbody = document.querySelector("#apuestasTable tbody");
     tbody.innerHTML="";
     data.forEach((a,i)=>{
+      const disabled = carrerasRealizadas.includes(a.carrera) ? 'disabled' : '';
       const tr=document.createElement("tr");
-      tr.innerHTML=`
-        <td>${a.usuario}</td>
-        <td>${a.carrera}</td>
-        <td>${a.tipo}</td>
-        <td>${JSON.stringify(a.objetivo)}</td>
-        <td>${a.cantidad}</td>
-        <td>
-          <button onclick="modificarApuesta(${i})">Editar</button>
-          <button onclick="borrarApuesta(${i})">Borrar</button>
-        </td>`;
+      tr.innerHTML=`<td>${a.usuario}</td><td>${a.carrera}</td><td>${a.tipo}</td>
+      <td>${JSON.stringify(a.objetivo)}</td><td>${a.cantidad}</td>
+      <td>
+        <button onclick="modificarApuesta(${i})" ${disabled}>Editar</button>
+        <button onclick="borrarApuesta(${i})" ${disabled}>Borrar</button>
+      </td>`;
       tbody.appendChild(tr);
     });
-  } catch(e){ console.error(e); }
+  }catch(e){ console.error(e); }
 }
 
+// Resto de funciones (modificarApuesta, borrarApuesta, registrar nueva apuesta, ranking)
+// Se mantienen igual que antes
 async function modificarApuesta(idx){
   const res = await fetch("http://localhost:3000/apuestas");
   const data = await res.json();
   const apuesta = data[idx];
+  if(carrerasRealizadas.includes(apuesta.carrera)) return;
   const form = document.getElementById("apuestaForm");
-
   form.usuario.value = apuesta.usuario;
   form.carrera.value = apuesta.carrera;
   form.tipo.value = apuesta.tipo;
   actualizarObjetivoInput();
-
-  // Rellenar objetivo según tipo
-  
-  if(apuesta.tipo==="posicion"){
-    form.caracol.value = apuesta.objetivo.nombre;
-    form.posicion.value = apuesta.objetivo.posicion;
-  } else if(apuesta.tipo==="primer_movimiento"||apuesta.tipo==="primer_salida"){
-    form.caracol.value = apuesta.objetivo;
-  } else if(apuesta.tipo==="tiempo"){
-    form.tiempo.value = apuesta.objetivo;
-  } else if(apuesta.tipo==="cuantos_llegan"){
-    form.cantidadLlegan.value = apuesta.objetivo;
-  }
-
-  // Borrar la apuesta antigua
+  if(apuesta.tipo==="posicion"){ form.caracol.value = apuesta.objetivo.nombre; form.posicion.value = apuesta.objetivo.posicion; }
+  else if(apuesta.tipo==="primer_movimiento"||apuesta.tipo==="primer_salida"){ form.caracol.value = apuesta.objetivo; }
+  else if(apuesta.tipo==="tiempo"){ form.tiempo.value = apuesta.objetivo; }
+  else if(apuesta.tipo==="cuantos_llegan"){ form.cantidadLlegan.value = apuesta.objetivo; }
   await borrarApuesta(idx);
 }
 
 async function borrarApuesta(idx){
   const res = await fetch("http://localhost:3000/apuestas");
   const data = await res.json();
+  const apuesta = data[idx];
+  if(carrerasRealizadas.includes(apuesta.carrera)) return;
   data.splice(idx,1);
-
-  // Enviar arreglo actualizado al backend (simulación)
-  await fetch("http://localhost:3000/apuestas-update",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
-
+  await fetch("http://localhost:3000/apuestas-update",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
   cargarApuestas();
 }
 
-// --- Registrar nueva apuesta ---
+// Registrar apuesta
 document.getElementById("apuestaForm").addEventListener("submit", async e=>{
   e.preventDefault();
   const form = e.target;
   const usuario = form.usuario.value.trim();
   if(!usuariosPermitidos.includes(usuario)){ alert("Usuario no válido"); return; }
-
-  const data={usuario,carrera:parseInt(form.carrera.value),tipo:form.tipo.value,cantidad:parseInt(form.cantidad.value),objetivo:null};
-
+  const data={
+    usuario,
+    carrera:parseInt(form.carrera.value),
+    tipo:form.tipo.value,
+    cantidad:parseInt(form.cantidad.value),
+    objetivo:null
+  };
   if(data.tipo==="posicion") data.objetivo={nombre:form.caracol.value,posicion:parseInt(form.posicion.value)};
   else if(data.tipo==="primer_movimiento"||data.tipo==="primer_salida") data.objetivo=form.caracol.value;
   else if(data.tipo==="tiempo") data.objetivo=form.tiempo.value;
   else if(data.tipo==="cuantos_llegan") data.objetivo=parseInt(form.cantidadLlegan.value);
-
   try{
-    await fetch("http://localhost:3000/apuesta",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(data)
-    });
+    await fetch("http://localhost:3000/apuesta",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
     document.getElementById("apuestaResult").innerText="Apuesta registrada correctamente.";
-    cargarApuestas();
-    actualizarRanking();
+    cargarApuestas(); actualizarRanking();
   }catch(e){ console.error(e); alert("Error al registrar apuesta."); }
 });
 
-// --- Ranking ---
+// Ranking
 async function actualizarRanking(){
   try{
     const res = await fetch("http://localhost:3000/ranking");
     const data = await res.json();
     document.getElementById("ranking").innerText = data.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
-  } catch(e){ console.error(e); document.getElementById("ranking").innerText="Error al cargar ranking"; }
+  }catch(e){ console.error(e); document.getElementById("ranking").innerText="Error al cargar ranking"; }
 }
-
 document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
 
 // Inicializar
@@ -244,5 +274,7 @@ actualizarRanking();
 
 </main>
 </body>
+</html>
+
 </html>
 
