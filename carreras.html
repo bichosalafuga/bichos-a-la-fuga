@@ -12,9 +12,8 @@ nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
 main { margin: 20px; }
 fieldset { margin-bottom: 20px; padding: 10px; }
 pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
-button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-button:hover { background-color: #45a049; }
-h2 { margin-top: 30px; }
+label { display:block; margin-bottom:10px; }
+select { padding:5px; font-size:16px; }
 .video-container { margin: 20px 0; }
 .video-container iframe { width: 100%; height: 315px; }
 </style>
@@ -26,47 +25,91 @@ h2 { margin-top: 30px; }
   <p>Mira las carreras en directo o consulta videos explicativos</p>
 </header>
 
-<!-- MENÚ DE NAVEGACIÓN -->
 <nav>
   <a href="index.html">Inicio</a>
   <a href="apuestas.html">Apuestas</a>
-  <a href="carreras.html">Carreras</a>
+  <a href="carrera.html">Carreras</a>
   <a href="corredores.html">Corredores</a>
 </nav>
 
 <main>
 
+<h2>Selecciona la carrera</h2>
+<label>
+  Carrera:
+  <select id="selectCarrera">
+    <option value="1">Escalada Pegada</option>
+    <option value="2">Desliz Extremo</option>
+    <option value="3">Reto Baboso</option>
+    <option value="4">Turbo Caracol</option>
+    <option value="5">Lenta Conquista</option>
+    <option value="6">Súper Resbalón</option>
+    <option value="7">Meta Babosa</option>
+    <option value="8">Final Legendaria</option>
+  </select>
+</label>
+
 <h2>Video explicativo de la carrera</h2>
 <div class="video-container">
-  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo de la carrera" frameborder="0" allowfullscreen></iframe>
+  <iframe id="videoExplicativo" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo de la carrera" frameborder="0" allowfullscreen></iframe>
 </div>
 
 <h2>Ver la carrera en directo</h2>
 <div class="video-container">
-  <!-- Aquí puedes poner un video en directo o iframe de transmisión -->
-  <iframe src="https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig" title="Carrera en directo" frameborder="0" allowfullscreen></iframe>
+  <iframe id="videoDirecto" src="https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig" title="Carrera en directo" frameborder="0" allowfullscreen></iframe>
 </div>
 
 <fieldset>
   <legend>Resultados de la carrera</legend>
-  <pre id="resultadosCarrera">Aún no hay resultados</pre>
+  <pre id="resultadosCarrera">Selecciona una carrera para ver los resultados o estado.</pre>
 </fieldset>
 
-<button id="actualizarResultados">Actualizar resultados</button>
-
 <script>
-// Simulación de resultados
-let resultadosCarrera = [
-  { nombre: "Toreto", tiempo: "5s" },
-  { nombre: "Sinhuellas", tiempo: "6s" },
-  { nombre: "Gari", tiempo: "7s" }
-];
+// Resultados definitivos de las carreras que ya se han corrido
+const resultadosDefinitivos = {
+  1: [ {nombre:"Toreto", tiempo:"5s", posicion:1}, {nombre:"Sinhuellas", tiempo:"6s", posicion:2}, {nombre:"Gari", tiempo:"7s", posicion:3} ],
+  2: [ {nombre:"Sinhuellas", tiempo:"5s", posicion:1}, {nombre:"Toreto", tiempo:"6s", posicion:2}, {nombre:"Gari", tiempo:"7s", posicion:3} ],
+  3: [ {nombre:"Gari", tiempo:"5s", posicion:1}, {nombre:"Sinhuellas", tiempo:"6s", posicion:2}, {nombre:"Toreto", tiempo:"7s", posicion:3} ]
+  // Carreras 4 a 8 aún no se han corrido
+};
 
-document.getElementById("actualizarResultados").addEventListener("click", ()=>{
-  document.getElementById("resultadosCarrera").innerText = resultadosCarrera.map(r=>`${r.nombre}: ${r.tiempo}`).join("\n");
-});
+// Videos explicativos por carrera
+const videosExplicativos = {
+  1: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  2: "https://www.youtube.com/embed/9bZkp7q19f0",
+  3: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  4: "https://www.youtube.com/embed/9bZkp7q19f0",
+  5: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  6: "https://www.youtube.com/embed/9bZkp7q19f0",
+  7: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  8: "https://www.youtube.com/embed/9bZkp7q19f0"
+};
+
+// Función para mostrar resultados
+function mostrarResultados() {
+  const carreraId = document.getElementById("selectCarrera").value;
+  document.getElementById("videoExplicativo").src = videosExplicativos[carreraId];
+
+  if(resultadosDefinitivos[carreraId]) {
+    const resultados = resultadosDefinitivos[carreraId];
+    document.getElementById("resultadosCarrera").innerText =
+      resultados.map(r=>`Posición ${r.posicion}: ${r.nombre} - Tiempo: ${r.tiempo}`).join("\n");
+  } else {
+    document.getElementById("resultadosCarrera").innerText = "⚠️ Carrera aún no realizada. Resultados disponibles después de la carrera.";
+  }
+}
+
+// Actualizar al cambiar de carrera
+document.getElementById("selectCarrera").addEventListener("change", mostrarResultados);
+
+// Inicializa con la primera carrera
+mostrarResultados();
 </script>
 
 </main>
 </body>
 </html>
+
+<h2>Ver la carrera en directo</h2>
+<div class="video-container">
+  <iframe id="videoDirecto" src="https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig" title="Carrera en directo"
