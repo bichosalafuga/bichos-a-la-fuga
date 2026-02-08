@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Bichos a la fuga</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    fieldset { margin-bottom: 20px; padding: 10px; }
+    label { display: block; margin: 5px 0; }
+    button { margin-top: 10px; }
+    pre { background: #f0f0f0; padding: 10px; }
+  </style>
 </head>
 <body>
 
@@ -13,141 +19,138 @@
 </header>
 
 <main>
-  <p>
-    Juego privado con fines lúdicos.<br>
-    Apuestas con moneda ficticia sin valor económico.
-  </p>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>🐌 Bichos a la Fuga</title>
-<style>
-  body { font-family: sans-serif; margin: 20px; }
-  fieldset { margin-bottom: 20px; padding: 10px; }
-  label { display: block; margin: 5px 0; }
-  button { margin-top: 10px; }
-  pre { background: #f0f0f0; padding: 10px; }
-</style>
-</head>
-<body>
-<h1>🐌 Bichos a la Fuga</h1>
+  <p>Juego privado con fines lúdicos.<br>Apuestas con moneda ficticia sin valor económico.</p>
 
-<fieldset>
-  <legend>Apostar</legend>
-  <form id="apuestaForm">
-    <label>Usuario ID: <input type="number" name="usuarioId" required></label>
-    <label>Carrera ID: <input type="number" name="carreraId" required></label>
-    <label>Opción: <input type="text" name="opcion" required></label>
-    <label>Cantidad de babosas: <input type="number" name="cantidad" required></label>
-    <button type="submit">Apostar</button>
-  </form>
-  <pre id="apuestaResult"></pre>
-</fieldset>
+  <!-- FORMULARIO DE APUESTAS -->
+  <fieldset>
+    <legend>Apostar</legend>
+    <form id="apuestaForm">
+      <label>Usuario ID: <input type="number" name="usuarioId" required></label>
+      <label>Carrera ID: <input type="number" name="carreraId" required></label>
+      <label>Tipo de apuesta:
+        <select name="tipo" required>
+          <option value="posicion">Posición final</option>
+          <option value="primer_movimiento">Primer en moverse</option>
+          <option value="primer_salida">Primer en salirse</option>
+          <option value="tiempo">Tiempo de llegada</option>
+        </select>
+      </label>
+      <label>Objetivo (nombre del caracol o número según tipo): <input type="text" name="objetivo" required></label>
+      <label>Cantidad de babosas: <input type="number" name="cantidad" required></label>
+      <button type="submit">Apostar</button>
+    </form>
+    <pre id="apuestaResult"></pre>
+  </fieldset>
 
-<fieldset>
-  <legend>Panel Admin</legend>
-  <label>Carrera ID: <input type="number" id="adminCarreraId" value="1"></label>
-  <label>Ganador: <input type="text" id="adminGanador"></label>
-  <button id="iniciarCarrera">Iniciar Carrera</button>
-  <button id="finalizarCarrera">Finalizar Carrera</button>
-  <pre id="adminResult"></pre>
-</fieldset>
+  <!-- PANEL ADMIN -->
+  <fieldset>
+    <legend>Panel Admin</legend>
+    <label>Carrera ID: <input type="number" id="adminCarreraId" value="1"></label>
+    <label>Resultados JSON:</label>
+    <textarea id="adminResultados" placeholder='[{"nombre":"Rápido Slim","tiempoLlegada":5,"seMovioPrimero":true,"seSalio":false}]' rows="4" cols="50"></textarea>
+    <button id="iniciarCarrera">Iniciar Carrera</button>
+    <button id="finalizarCarrera">Finalizar Carrera</button>
+    <pre id="adminResult"></pre>
+  </fieldset>
 
-<fieldset>
-  <legend>Ranking</legend>
-  <button id="refreshRanking">Actualizar Ranking</button>
-  <pre id="ranking"></pre>
-</fieldset>
+  <!-- RANKING -->
+  <fieldset>
+    <legend>Ranking</legend>
+    <button id="refreshRanking">Actualizar Ranking</button>
+    <pre id="ranking"></pre>
+  </fieldset>
 
-<fieldset>
-  <legend>Historial de apuestas</legend>
-  <button id="refreshApuestas">Actualizar Apuestas</button>
-  <pre id="historial"></pre>
-</fieldset>
+  <!-- HISTORIAL DE APUESTAS -->
+  <fieldset>
+    <legend>Historial de apuestas</legend>
+    <button id="refreshApuestas">Actualizar Apuestas</button>
+    <pre id="historial"></pre>
+  </fieldset>
+
+</main>
+
+<footer>
+  <p>Juego privado · Moneda ficticia · Sin pagos ni premios reales</p>
+</footer>
 
 <script>
 const API = "http://localhost:3000";
 
-// Apostar
+// FORMULARIO DE APUESTAS
 document.getElementById("apuestaForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+  const form = e.target;
+  const tipo = form.tipo.value;
+  let objetivo;
+
+  // Adaptar input a tipo de apuesta
+  if (tipo === "posicion" || tipo === "tiempo") {
+    // Convertir a número
+    objetivo = isNaN(parseInt(form.objetivo.value)) ? form.objetivo.value : parseInt(form.objetivo.value);
+    if (tipo === "tiempo") {
+      // Para tiempo necesitamos un objeto con nombre y tiempoMax
+      objetivo = { nombre: form.objetivo.value.split(",")[0].trim(), tiempoMax: parseInt(form.objetivo.value.split(",")[1]) };
+    }
+  } else {
+    objetivo = form.objetivo.value;
+  }
+
   const data = {
-    usuarioId: parseInt(e.target.usuarioId.value),
-    carreraId: parseInt(e.target.carreraId.value),
-    opcion: e.target.opcion.value,
-    cantidad: parseInt(e.target.cantidad.value)
+    usuarioId: parseInt(form.usuarioId.value),
+    carreraId: parseInt(form.carreraId.value),
+    tipo,
+    objetivo,
+    cantidad: parseInt(form.cantidad.value)
   };
-  const res = await fetch(`${API}/apostar`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(data) });
+
+  const res = await fetch(`${API}/apostar`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
   const json = await res.json();
   document.getElementById("apuestaResult").innerText = JSON.stringify(json, null, 2);
 });
 
-// Admin
+// PANEL ADMIN
 document.getElementById("iniciarCarrera").addEventListener("click", async () => {
   const carreraId = parseInt(document.getElementById("adminCarreraId").value);
-  const res = await fetch(`${API}/admin/carrera/iniciar`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({carreraId}) });
+  const res = await fetch(`${API}/admin/carrera/iniciar`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ carreraId })
+  });
   document.getElementById("adminResult").innerText = JSON.stringify(await res.json(), null, 2);
 });
 
 document.getElementById("finalizarCarrera").addEventListener("click", async () => {
   const carreraId = parseInt(document.getElementById("adminCarreraId").value);
-  const ganador = document.getElementById("adminGanador").value;
-  const res = await fetch(`${API}/admin/carrera/finalizar`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({carreraId, ganador}) });
+  const resultadosText = document.getElementById("adminResultados").value;
+  let resultados;
+  try { resultados = JSON.parse(resultadosText); } 
+  catch(e) { alert("JSON inválido"); return; }
+
+  const res = await fetch(`${API}/admin/carrera/finalizar`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ carreraId, resultados })
+  });
   document.getElementById("adminResult").innerText = JSON.stringify(await res.json(), null, 2);
 });
 
-// Ranking
+// RANKING
 document.getElementById("refreshRanking").addEventListener("click", async () => {
   const res = await fetch(`${API}/ranking`);
   document.getElementById("ranking").innerText = JSON.stringify(await res.json(), null, 2);
 });
 
-// Historial apuestas
+// HISTORIAL DE APUESTAS
 document.getElementById("refreshApuestas").addEventListener("click", async () => {
   const res = await fetch(`${API}/apuestas`);
   document.getElementById("historial").innerText = JSON.stringify(await res.json(), null, 2);
 });
 </script>
-</body>
-</html>
-
-  <a class="btn" href="carrera.html">Entrar a la carrera</a>
-</main>
-  
-<script>
-fetch("https://bichos-backend.onrender.com/ranking")
-  .then(res => res.json())
-  .then(data => {
-    console.log("Ranking:", data);
-  });
-</script>
-  
-<footer>
-  <p>
-    Juego privado · Moneda ficticia · Sin pagos ni premios reales
-  </p>
-</footer>
-<h2>🏆 Ranking de la temporada</h2>
-<ul id="ranking"></ul>
-
-<script>
-fetch("https://bichos-backend.onrender.com/ranking")
-  .then(response => response.json())
-  .then(data => {
-    const lista = document.getElementById("ranking");
-    lista.innerHTML = "";
-
-    data.forEach((usuario, index) => {
-      const li = document.createElement("li");
-      li.textContent = `${index + 1}. ${usuario.nombre} — 🥬 ${usuario.lechuguines}`;
-      lista.appendChild(li);
-    });
-  })
-  .catch(error => {
-    console.error("Error conectando con backend:", error);
-  });
-</script>
 
 </body>
 </html>
+
