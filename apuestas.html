@@ -97,7 +97,7 @@ th { background:#eee; }
 
 <script>
 const usuariosPermitidos = ["Junma01","Jony67","Jorge07"];
-const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"];
+const participantes = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
 const tipoApuesta = document.getElementById("tipoApuesta");
 const objetivoContainer = document.getElementById("objetivoContainer");
 
@@ -169,6 +169,7 @@ async function modificarApuesta(idx){
   actualizarObjetivoInput();
 
   // Rellenar objetivo según tipo
+  
   if(apuesta.tipo==="posicion"){
     form.caracol.value = apuesta.objetivo.nombre;
     form.posicion.value = apuesta.objetivo.posicion;
