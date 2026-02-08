@@ -79,11 +79,17 @@ let ranking = [0,0,0]; // lechuguines acumulados
 const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"];
 let babosasCarreras = [100,100,100,100,100,100,100,100]; // 8 carreras
 
-// Contenedor inputs dinámicos
+// --- Resultados de cada carrera (simulados) ---
+const resultadosCarreras = [
+  {posicion:["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"], primer_movimiento:"Sinhuellas", primer_salida:"Toreto", tiempo:"10-20", cuantos_llegan:5},
+  {posicion:["Tro Gari","Toreto","Baboso Flash","Arrastrado","Sinhuellas"], primer_movimiento:"Tro Gari", primer_salida:"Baboso Flash", tiempo:"0-10", cuantos_llegan:4},
+  {}, {}, {}, {}, {}, {} // completar las demás carreras o dejar vacías
+];
+
+// --- Inputs dinámicos ---
 const objetivoContainer = document.getElementById("objetivoContainer");
 const tipoApuesta = document.getElementById("tipoApuesta");
 
-// --- Función para inputs según tipo de apuesta ---
 function actualizarObjetivoInput(){
   const tipo = tipoApuesta.value;
   objetivoContainer.innerHTML = "";
@@ -114,7 +120,7 @@ function actualizarObjetivoInput(){
 actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
 
-// --- Mostrar ranking ---
+// --- Ranking ---
 function mostrarRanking(){
   const copia = ranking.map((lech,i)=>({nombre:jugadores[i], lech}));
   copia.sort((a,b)=>b.lech - a.lech);
@@ -130,7 +136,7 @@ document.getElementById("apuestaForm").addEventListener("submit",(e)=>{
   // Validar nombre
   const indiceJugador = jugadores.indexOf(nombreUsuario);
   if(indiceJugador === -1){
-    alert("Nombre de usuario no válido. Debe ser uno de los jugadores predefinidos.");
+    alert("Nombre de usuario no válido.");
     return;
   }
 
@@ -144,19 +150,33 @@ document.getElementById("apuestaForm").addEventListener("submit",(e)=>{
     return;
   }
 
-  // Ganancia simulada
-  const ganancia = cantidad * (tipo==="posicion"?2:3);
+  // Comprobar si la apuesta coincide con el resultado
+  let acierto = false;
+  const resultado = resultadosCarreras[carrera] || {};
+  if(tipo === "posicion" && resultado.posicion){
+    acierto = resultado.posicion[parseInt(form.posicion.value)-1] === form.caracol.value;
+  } else if(tipo === "primer_movimiento"){
+    acierto = resultado.primer_movimiento === form.caracol.value;
+  } else if(tipo === "primer_salida"){
+    acierto = resultado.primer_salida === form.caracol.value;
+  } else if(tipo === "tiempo"){
+    acierto = resultado.tiempo === form.tiempo.value;
+  } else if(tipo === "cuantos_llegan"){
+    acierto = resultado.cuantos_llegan === parseInt(form.cantidadLlegan.value);
+  }
 
   // Restar babosas
   babosasCarreras[carrera] -= cantidad;
 
-  // Sumar al ranking
-  ranking[indiceJugador] += ganancia;
+  let ganancia = 0;
+  if(acierto){
+    ganancia = cantidad * (tipo==="posicion"?2:3);
+    ranking[indiceJugador] += ganancia;
+  }
 
   document.getElementById("apuestaResult").innerText = 
-    `Apuesta realizada.\nGanancia: ${ganancia} lechuguines\nBabosas restantes en carrera: ${babosasCarreras[carrera]}`;
+    `Apuesta registrada.\n${acierto?`¡Acertaste! Ganancia: ${ganancia} lechuguines`:"No acertaste, no hay ganancia"}\nBabosas restantes en carrera: ${babosasCarreras[carrera]}`;
 
-  // Actualizar ranking
   mostrarRanking();
 });
 
