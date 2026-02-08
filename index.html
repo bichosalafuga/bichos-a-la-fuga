@@ -4,12 +4,20 @@
 <meta charset="UTF-8">
 <title>Bichos a la fuga - Principal</title>
 <style>
-body { font-family: sans-serif; margin:20px; }
-fieldset { margin-bottom:20px; padding:10px; }
-pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
+body { font-family: sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
+main { margin: 20px; }
+fieldset { margin-bottom: 20px; padding: 10px; }
+pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
+button:hover { background-color: #45a049; }
+h2 { margin-top: 30px; }
+.video-container { margin: 20px 0; }
+.video-container iframe { width: 100%; height: 315px; }
 </style>
 </head>
 <body>
+
 <header>
 <h1>🐌 Bichos a la fuga</h1>
 <p>El campeonato más lento del mundo</p>
@@ -23,6 +31,18 @@ pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
 3. Ganar la posición duplica lechuguines; acertar tiempo, primer movimiento, primer en salirse o cuantos llegan triplica. <br>
 4. Hay 8 carreras por campeonato, los lechuguines se acumulan.
 </p>
+
+<div class="video-container">
+  <h3>Video explicativo 1</h3>
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo 1" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div class="video-container">
+  <h3>Video explicativo 2</h3>
+  <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" title="Video explicativo 2" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<button onclick="window.location.href='apuestas.html'">🎯 Hacer Apuestas</button>
 
 <fieldset>
   <legend>Ranking actual</legend>
@@ -42,7 +62,7 @@ let ranking = [
   {usuario:"Gari", lechuguines:0}
 ];
 
-let resultadosCarreras = []; // Guardar resultados de cada carrera
+let resultadosCarreras = [];
 
 function actualizarRanking(){
   ranking.sort((a,b)=>b.lechuguines - a.lechuguines);
@@ -59,6 +79,7 @@ document.getElementById("refreshRanking").addEventListener("click", actualizarRa
 actualizarRanking();
 mostrarResultados();
 </script>
+
 </body>
 </html>
 
