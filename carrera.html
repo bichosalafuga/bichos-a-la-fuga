@@ -1,57 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Carrera en directo – Bichos a la fuga</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<title>Bichos a la fuga - Carreras</title>
+<style>
+body { font-family: sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
+nav { background: #333; display: flex; justify-content: center; }
+nav a { color: white; text-decoration: none; padding: 10px 20px; }
+nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
+main { margin: 20px; }
+fieldset { margin-bottom: 20px; padding: 10px; }
+pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
+button:hover { background-color: #45a049; }
+h2 { margin-top: 30px; }
+.video-container { margin: 20px 0; }
+.video-container iframe { width: 100%; height: 315px; }
+</style>
 </head>
 <body>
 
 <header>
-  <h1>🐌 Gran Premio del Pepino Torcido</h1>
-  <p>Estado: Apuestas cerradas (en construcción)</p>
+  <h1>🏁 Carreras - Bichos a la fuga</h1>
+  <p>Mira las carreras en directo o consulta videos explicativos</p>
 </header>
-<!-- MENÚ DE NAVEGACIÓN COMÚN -->
-<nav style="background:#333; display:flex; justify-content:center; padding:10px;">
-  <a href="index.html" style="color:white; text-decoration:none; padding:10px 20px;">Inicio</a>
-  <a href="apuestas.html" style="color:white; text-decoration:none; padding:10px 20px;">Apuestas</a>
-  <a href="carrera.html" style="color:white; text-decoration:none; padding:10px 20px;">Carreras</a>
-  <a href="corredores.html" style="color:white; text-decoration:none; padding:10px 20px;">Corredores</a>
+
+<!-- MENÚ DE NAVEGACIÓN -->
+<nav>
+  <a href="index.html">Inicio</a>
+  <a href="apuestas.html">Apuestas</a>
+  <a href="carrera.html">Carreras</a>
+  <a href="corredores.html">Corredores</a>
 </nav>
 
 <main>
 
-  <section>
-    <iframe
-      width="560"
-      height="315"
-      src="https://www.youtube.com/@BichosalaFuga/enlace al video en directo"
-      allowfullscreen>
-    </iframe>
-  </section>
+<h2>Video explicativo de la carrera</h2>
+<div class="video-container">
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo de la carrera" frameborder="0" allowfullscreen></iframe>
+</div>
 
-  <section>
-    <iframe
-      width="560"
-      height="315"
-      src="https://www.youtube.com/live_chat?v=ID_DEL_DIRECTO&embed_domain=TU_USUARIO.github.io">
-    </iframe>
-  </section>
+<h2>Ver la carrera en directo</h2>
+<div class="video-container">
+  <!-- Aquí puedes poner un video en directo o iframe de transmisión -->
+  <iframe src="https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig" title="Carrera en directo" frameborder="0" allowfullscreen></iframe>
+</div>
 
-  <section>
-    <h2>Apuestas (babosas ficticias)</h2>
-    <button>TurboRamoncio</button>
-    <button>LimoDestructor</button>
-    <button>Don Caracol III</button>
-  </section>
+<fieldset>
+  <legend>Resultados de la carrera</legend>
+  <pre id="resultadosCarrera">Aún no hay resultados</pre>
+</fieldset>
+
+<button id="actualizarResultados">Actualizar resultados</button>
+
+<script>
+// Simulación de resultados
+let resultadosCarrera = [
+  { nombre: "Toreto", tiempo: "5s" },
+  { nombre: "Sinhuellas", tiempo: "6s" },
+  { nombre: "Gari", tiempo: "7s" }
+];
+
+document.getElementById("actualizarResultados").addEventListener("click", ()=>{
+  document.getElementById("resultadosCarrera").innerText = resultadosCarrera.map(r=>`${r.nombre}: ${r.tiempo}`).join("\n");
+});
+</script>
 
 </main>
-
-<footer>
-  <p>
-    Juego privado · Moneda ficticia · Sin valor económico
-  </p>
-</footer>
-
 </body>
 </html>
