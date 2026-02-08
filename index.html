@@ -7,40 +7,35 @@
 body { font-family: sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
 header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
 nav { background: #333; display: flex; justify-content: center; }
-nav button { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; font-size: 16px; }
-nav button:hover, nav button.active { background: #4CAF50; }
+nav a { color: white; text-decoration: none; padding: 10px 20px; }
+nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
 main { margin: 20px; }
-fieldset { margin-bottom: 20px; padding: 10px; display: none; }
-fieldset.active { display: block; }
+fieldset { margin-bottom: 20px; padding: 10px; }
 pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
-button.primary { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-button.primary:hover { background-color: #45a049; }
+button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
+button:hover { background-color: #45a049; }
 h2 { margin-top: 30px; }
 .video-container { margin: 20px 0; }
 .video-container iframe { width: 100%; height: 315px; }
-.corredor { background: #fff; border-radius: 5px; padding: 10px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 </style>
 </head>
 <body>
 
 <header>
-<h1>🐌 Bichos a la fuga</h1>
-<p>El campeonato más lento del mundo</p>
+  <h1>🐌 Bichos a la fuga</h1>
+  <p>El campeonato más lento del mundo</p>
 </header>
 
-<!-- MENÚ DE NAVEGACIÓN COMÚN -->
-<nav style="background:#333; display:flex; justify-content:center; padding:10px;">
-  <a href="index.html" style="color:white; text-decoration:none; padding:10px 20px;">Inicio</a>
-  <a href="apuestas.html" style="color:white; text-decoration:none; padding:10px 20px;">Apuestas</a>
-  <a href="carrera.html" style="color:white; text-decoration:none; padding:10px 20px;">Carreras</a>
-  <a href="corredores.html" style="color:white; text-decoration:none; padding:10px 20px;">Corredores</a>
+<!-- MENÚ DE NAVEGACIÓN -->
+<nav>
+  <a href="index.html">Inicio</a>
+  <a href="apuestas.html">Apuestas</a>
+  <a href="carrera.html">Carreras</a>
+  <a href="corredores.html">Corredores</a>
 </nav>
-
 
 <main>
 
-<!-- SECCIÓN INICIO -->
-<fieldset id="inicio" class="active">
 <h2>Cómo funciona</h2>
 <p>
 1. Los usuarios pueden apostar a la posición, primer en moverse, primer en salirse, tiempo de llegada o cuántos llegan. <br>
@@ -51,5 +46,54 @@ h2 { margin-top: 30px; }
 
 <div class="video-container">
   <h3>Video explicativo 1</h3>
-  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo 1"
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo 1" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div class="video-container">
+  <h3>Video explicativo 2</h3>
+  <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" title="Video explicativo 2" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<button onclick="window.location.href='apuestas.html'">🎯 Hacer Apuestas</button>
+
+<fieldset>
+  <legend>Ranking actual</legend>
+  <pre id="ranking">Cargando...</pre>
+  <button id="refreshRanking">Actualizar ranking</button>
+</fieldset>
+
+<fieldset>
+  <legend>Resultados de las carreras</legend>
+  <pre id="resultadosCarreras">Cargando...</pre>
+</fieldset>
+
+<script>
+// --- RANKING ---
+let ranking = [
+  {usuario:"Toreto", lechuguines:0},
+  {usuario:"Sinhuellas", lechuguines:0},
+  {usuario:"Gari", lechuguines:0}
+];
+
+let resultadosCarreras = [];
+
+function actualizarRanking(){
+  ranking.sort((a,b)=>b.lechuguines - a.lechuguines);
+  document.getElementById("ranking").innerText = ranking.map(r=>`${r.usuario}: ${r.lechuguines} lechuguines`).join("\n");
+}
+
+function mostrarResultados(){
+  if(resultadosCarreras.length===0) document.getElementById("resultadosCarreras").innerText = "Aún no hay resultados";
+  else document.getElementById("resultadosCarreras").innerText = resultadosCarreras.map((r,i)=>`Carrera ${i+1} (${r.nombre}):\n${r.texto}`).join("\n\n");
+}
+
+document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
+
+actualizarRanking();
+mostrarResultados();
+</script>
+
+</main>
+</body>
+</html>
 
