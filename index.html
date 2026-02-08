@@ -38,10 +38,10 @@ h2 { margin-top: 30px; }
 
 <h2>Cómo funciona</h2>
 <p>
-1. Los usuarios pueden apostar a la posición, primer en moverse, primer en salirse, tiempo de llegada o cuántos llegan. <br>
+1. Los usuarios pueden realizar diferentes tipos de apuestas. <br>
 2. Cada carrera reparte 100 babosas. <br>
-3. Ganar la posición duplica lechuguines; acertar tiempo, primer movimiento, primer en salirse o cuantos llegan triplica. <br>
-4. Hay 8 carreras por campeonato, los lechuguines se acumulan.
+3. Las babosas acertadas se convierten en lechuguines, multiplicadas según la dificultad de la apuesta. <br>
+4. Hay 8 carreras por campeonato y los lechuguines se acumulan.
 </p>
 
 <div class="video-container">
@@ -62,38 +62,31 @@ h2 { margin-top: 30px; }
   <button id="refreshRanking">Actualizar ranking</button>
 </fieldset>
 
-<fieldset>
-  <legend>Resultados de las carreras</legend>
-  <pre id="resultadosCarreras">Cargando...</pre>
-</fieldset>
-
 <script>
-// --- RANKING ---
+// --- RANKING DE USUARIOS ACTIVOS ---
 let ranking = [
-  {usuario:"Toreto", lechuguines:0},
-  {usuario:"Sinhuellas", lechuguines:0},
-  {usuario:"Gari", lechuguines:0}
+  {usuario:"Toreto", lechuguines:120},
+  {usuario:"Sinhuellas", lechuguines:80},
+  {usuario:"Gari", lechuguines:0},      // inactivo, no aparecerá
+  {usuario:"LentoMax", lechuguines:50}
 ];
 
-let resultadosCarreras = [];
-
+// Mostrar solo usuarios activos (lechuguines > 0) y ordenados de mayor a menor
 function actualizarRanking(){
-  ranking.sort((a,b)=>b.lechuguines - a.lechuguines);
-  document.getElementById("ranking").innerText = ranking.map(r=>`${r.usuario}: ${r.lechuguines} lechuguines`).join("\n");
+  const activos = ranking.filter(u => u.lechuguines > 0);
+  activos.sort((a,b) => b.lechuguines - a.lechuguines);
+  document.getElementById("ranking").innerText = activos.map(u => `${u.usuario}: ${u.lechuguines} lechuguines`).join("\n");
 }
 
-function mostrarResultados(){
-  if(resultadosCarreras.length===0) document.getElementById("resultadosCarreras").innerText = "Aún no hay resultados";
-  else document.getElementById("resultadosCarreras").innerText = resultadosCarreras.map((r,i)=>`Carrera ${i+1} (${r.nombre}):\n${r.texto}`).join("\n\n");
-}
-
+// Botón para actualizar ranking
 document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
 
+// Inicializar ranking al cargar
 actualizarRanking();
-mostrarResultados();
 </script>
 
 </main>
 </body>
 </html>
+
 
