@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Bichos a la fuga</title>
+<title>Bichos a la fuga - Apuestas</title>
 <style>
   body { font-family: sans-serif; margin: 20px; }
   fieldset { margin-bottom: 20px; padding: 10px; }
   label { display: block; margin: 5px 0; }
   button { margin-top: 10px; }
-  pre { background: #f0f0f0; padding: 10px; }
+  pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -19,9 +19,8 @@
 </header>
 
 <main>
-  <p>Juego privado con fines lúdicos.<br>Apuestas con moneda ficticia sin valor económico.</p>
+  <p>Juego privado · Moneda ficticia · Sin valor económico.</p>
 
-  <!-- FORMULARIO DE APUESTAS -->
   <fieldset>
     <legend>Apostar</legend>
     <form id="apuestaForm">
@@ -47,58 +46,33 @@
 
       <div id="objetivoContainer"></div>
 
-      <label>Cantidad de babosas: <input type="number" name="cantidad" required></label>
+      <label>Cantidad de babosas: <input type="number" name="cantidad" required min="1"></label>
       <button type="submit">Apostar</button>
     </form>
     <pre id="apuestaResult"></pre>
   </fieldset>
 
-  <!-- PANEL ADMIN -->
   <fieldset>
-    <legend>Panel Admin</legend>
-    <label>Carrera ID: <input type="number" id="adminCarreraId" value="1"></label>
-    <label>Resultados JSON:</label>
-    <textarea id="adminResultados" placeholder='[{"nombre":"Toreto","tiempoLlegada":5,"seMovioPrimero":true,"seSalio":false}]' rows="4" cols="50"></textarea>
-    <button id="iniciarCarrera">Iniciar Carrera</button>
-    <button id="finalizarCarrera">Finalizar Carrera</button>
-    <pre id="adminResult"></pre>
+    <legend>Resultados de la carrera</legend>
+    <button id="simularCarrera">Simular Carrera</button>
+    <pre id="resultadosCarrera"></pre>
   </fieldset>
 
-  <!-- RANKING -->
   <fieldset>
-    <legend>Ranking</legend>
-    <button id="refreshRanking">Actualizar Ranking</button>
-    <pre id="ranking"></pre>
-  </fieldset>
-
-  <!-- HISTORIAL DE APUESTAS -->
-  <fieldset>
-    <legend>Historial de apuestas</legend>
-    <button id="refreshApuestas">Actualizar Apuestas</button>
-    <pre id="historial"></pre>
+    <legend>Lechuguines acumulados</legend>
+    <pre id="lechuguinesAcumulados">0</pre>
   </fieldset>
 </main>
 
-<footer>
-  <p>Juego privado · Moneda ficticia · Sin pagos ni premios reales</p>
-</footer>
-
 <script>
-const API = "http://localhost:3000";
-
-// Participantes de la carrera
-let participantes = [
-  "Toreto",
-  "Sinhuellas",
-  "Tro Gari",
-  "Arrastrado",
-  "Baboso Flash"
-];
+const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"];
+let apuestas = [];
+let lechuguines = 0;
 
 const objetivoContainer = document.getElementById("objetivoContainer");
 const tipoApuesta = document.getElementById("tipoApuesta");
 
-// Función para actualizar inputs según tipo de apuesta
+// Generar inputs dinámicos según tipo de apuesta
 function actualizarObjetivoInput() {
   const tipo = tipoApuesta.value;
   objetivoContainer.innerHTML = "";
@@ -106,25 +80,20 @@ function actualizarObjetivoInput() {
   if(tipo === "posicion") {
     const label = document.createElement("label");
     label.textContent = "Selecciona caracol y posición (1º,2º,3º):";
-
     const selectCaracol = document.createElement("select");
     selectCaracol.name = "caracol";
     participantes.forEach(p => {
-      const option = document.createElement("option");
-      option.value = p;
-      option.textContent = p;
-      selectCaracol.appendChild(option);
+      const opt = document.createElement("option");
+      opt.value = p; opt.textContent = p;
+      selectCaracol.appendChild(opt);
     });
-
     const selectPos = document.createElement("select");
     selectPos.name = "posicion";
     [1,2,3].forEach(n => {
-      const option = document.createElement("option");
-      option.value = n;
-      option.textContent = n;
-      selectPos.appendChild(option);
+      const opt = document.createElement("option");
+      opt.value = n; opt.textContent = n;
+      selectPos.appendChild(opt);
     });
-
     label.appendChild(selectCaracol);
     label.appendChild(selectPos);
     objetivoContainer.appendChild(label);
@@ -135,10 +104,9 @@ function actualizarObjetivoInput() {
     const select = document.createElement("select");
     select.name = "caracol";
     participantes.forEach(p => {
-      const option = document.createElement("option");
-      option.value = p;
-      option.textContent = p;
-      select.appendChild(option);
+      const opt = document.createElement("option");
+      opt.value = p; opt.textContent = p;
+      select.appendChild(opt);
     });
     label.appendChild(select);
     objetivoContainer.appendChild(label);
@@ -149,10 +117,9 @@ function actualizarObjetivoInput() {
     const select = document.createElement("select");
     select.name = "tiempo";
     ["0-10","10-20","20-30"].forEach(r => {
-      const option = document.createElement("option");
-      option.value = r;
-      option.textContent = r;
-      select.appendChild(option);
+      const opt = document.createElement("option");
+      opt.value = r; opt.textContent = r;
+      select.appendChild(opt);
     });
     label.appendChild(select);
     objetivoContainer.appendChild(label);
@@ -163,90 +130,84 @@ function actualizarObjetivoInput() {
     const select = document.createElement("select");
     select.name = "cantidadLlegan";
     [1,2,3,4,5].forEach(n => {
-      const option = document.createElement("option");
-      option.value = n;
-      option.textContent = n;
-      select.appendChild(option);
+      const opt = document.createElement("option");
+      opt.value = n; opt.textContent = n;
+      select.appendChild(opt);
     });
     label.appendChild(select);
     objetivoContainer.appendChild(label);
   }
 }
-
-// Inicializar formulario
 actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
 
-// Enviar apuesta
-document.getElementById("apuestaForm").addEventListener("submit", async (e) => {
+// Validar y guardar apuesta
+document.getElementById("apuestaForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const form = e.target;
+  const usuarioId = parseInt(form.usuarioId.value);
+  const carreraId = parseInt(form.carreraId.value);
   const tipo = form.tipo.value;
-  let objetivo;
+  const cantidad = parseInt(form.cantidad.value);
 
-  if(tipo === "posicion") {
+  if(cantidad <= 0){ alert("Cantidad inválida"); return; }
+
+  let objetivo = null;
+  if(tipo === "posicion"){
+    if(!form.caracol.value || !form.posicion.value){ alert("Selecciona caracol y posición"); return; }
     objetivo = { nombre: form.caracol.value, posicion: parseInt(form.posicion.value) };
-  } else if(tipo === "primer_movimiento" || tipo === "primer_salida") {
+  } else if(tipo === "primer_movimiento" || tipo === "primer_salida"){
+    if(!form.caracol.value){ alert("Selecciona caracol"); return; }
     objetivo = form.caracol.value;
-  } else if(tipo === "tiempo") {
+  } else if(tipo === "tiempo"){
+    if(!form.tiempo.value){ alert("Selecciona un rango de tiempo"); return; }
     objetivo = form.tiempo.value;
-  } else if(tipo === "cuantos_llegan") {
+  } else if(tipo === "cuantos_llegan"){
+    if(!form.cantidadLlegan.value){ alert("Selecciona cuántos llegan"); return; }
     objetivo = parseInt(form.cantidadLlegan.value);
   }
 
-  const data = {
-    usuarioId: parseInt(form.usuarioId.value),
-    carreraId: parseInt(form.carreraId.value),
-    tipo,
-    objetivo,
-    cantidad: parseInt(form.cantidad.value)
-  };
+  apuestas.push({ usuarioId, carreraId, tipo, objetivo, cantidad });
+  document.getElementById("apuestaResult").innerText = JSON.stringify(apuestas,null,2);
+});
 
-  const res = await fetch(`${API}/apostar`, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify(data)
+// Simular carrera y calcular ganancias
+document.getElementById("simularCarrera").addEventListener("click", () => {
+  // Resultados aleatorios
+  const posiciones = [...participantes].sort(()=>Math.random()-0.5);
+  const primerMover = participantes[Math.floor(Math.random()*participantes.length)];
+  const primerSalir = participantes[Math.floor(Math.random()*participantes.length)];
+  const tiempo = ["0-10","10-20","20-30"][Math.floor(Math.random()*3)];
+  const cuantosLlegan = Math.floor(Math.random()*5)+1;
+
+  let resultadosTexto = `Posiciones: ${posiciones.join(", ")}\nPrimer en moverse: ${primerMover}\nPrimer en salirse: ${primerSalir}\nTiempo: ${tiempo}\nCuántos llegaron: ${cuantosLlegan}\n\n`;
+
+  // Calcular ganancias
+  apuestas.forEach(a => {
+    let ganancia = a.cantidad; // base 100 babosas u otra cantidad
+    if(a.tipo === "posicion"){
+      if(a.objetivo.posicion <=3 && posiciones[a.objetivo.posicion-1] === a.objetivo.nombre) ganancia *= 2;
+      else ganancia = 0;
+    } else if(a.tipo === "primer_movimiento"){
+      if(a.objetivo === primerMover) ganancia *=3;
+      else ganancia=0;
+    } else if(a.tipo === "primer_salida"){
+      if(a.objetivo === primerSalir) ganancia *=3;
+      else ganancia=0;
+    } else if(a.tipo === "tiempo"){
+      if(a.objetivo === tiempo) ganancia *=3;
+      else ganancia=0;
+    } else if(a.tipo === "cuantos_llegan"){
+      if(a.objetivo === cuantosLlegan) ganancia *=3;
+      else ganancia=0;
+    }
+    lechuguines += ganancia;
+    resultadosTexto += `Usuario ${a.usuarioId} ganó ${ganancia} lechuguines\n`;
   });
-  const json = await res.json();
-  document.getElementById("apuestaResult").innerText = JSON.stringify(json, null, 2);
-});
 
-// PANEL ADMIN
-document.getElementById("iniciarCarrera").addEventListener("click", async () => {
-  const carreraId = parseInt(document.getElementById("adminCarreraId").value);
-  const res = await fetch(`${API}/admin/carrera/iniciar`, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ carreraId })
-  });
-  document.getElementById("adminResult").innerText = JSON.stringify(await res.json(), null, 2);
-});
-
-document.getElementById("finalizarCarrera").addEventListener("click", async () => {
-  const carreraId = parseInt(document.getElementById("adminCarreraId").value);
-  const resultadosText = document.getElementById("adminResultados").value;
-  let resultados;
-  try { resultados = JSON.parse(resultadosText); } 
-  catch(e) { alert("JSON inválido"); return; }
-
-  const res = await fetch(`${API}/admin/carrera/finalizar`, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ carreraId, resultados })
-  });
-  document.getElementById("adminResult").innerText = JSON.stringify(await res.json(), null, 2);
-});
-
-// RANKING
-document.getElementById("refreshRanking").addEventListener("click", async () => {
-  const res = await fetch(`${API}/ranking`);
-  document.getElementById("ranking").innerText = JSON.stringify(await res.json(), null, 2);
-});
-
-// HISTORIAL DE APUESTAS
-document.getElementById("refreshApuestas").addEventListener("click", async () => {
-  const res = await fetch(`${API}/apuestas`);
-  document.getElementById("historial").innerText = JSON.stringify(await res.json(), null, 2);
+  document.getElementById("resultadosCarrera").innerText = resultadosTexto;
+  document.getElementById("lechuguinesAcumulados").innerText = lechuguines;
+  apuestas = []; // limpiar apuestas para próxima carrera
 });
 </script>
 
