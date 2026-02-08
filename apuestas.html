@@ -70,120 +70,116 @@ button:hover { background-color:#45a049; }
 <fieldset>
   <legend>Ranking actual</legend>
   <pre id="ranking">Cargando...</pre>
+  <button id="refreshRanking">Actualizar ranking</button>
 </fieldset>
 
 <script>
-// --- Configuración inicial ---
-const jugadores = ["Junma01","Jony67","Jorge07"];
-let ranking = [0,0,0]; // lechuguines acumulados
+const usuariosPermitidos = ["Junma01","Jony67","Jorge07"];
 const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"];
-let babosasCarreras = [100,100,100,100,100,100,100,100]; // 8 carreras
-
-// --- Resultados de cada carrera (simulados) ---
-const resultadosCarreras = [
-  {posicion:["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"], primer_movimiento:"Sinhuellas", primer_salida:"Toreto", tiempo:"10-20", cuantos_llegan:5},
-  {posicion:["Tro Gari","Toreto","Baboso Flash","Arrastrado","Sinhuellas"], primer_movimiento:"Tro Gari", primer_salida:"Baboso Flash", tiempo:"0-10", cuantos_llegan:4},
-  {}, {}, {}, {}, {}, {} // completar las demás carreras o dejar vacías
-];
-
-// --- Inputs dinámicos ---
-const objetivoContainer = document.getElementById("objetivoContainer");
 const tipoApuesta = document.getElementById("tipoApuesta");
+const objetivoContainer = document.getElementById("objetivoContainer");
 
+// --- Función para crear inputs según tipo de apuesta ---
 function actualizarObjetivoInput(){
   const tipo = tipoApuesta.value;
   objetivoContainer.innerHTML = "";
-  if(tipo === "posicion"){
-    const label = document.createElement("label"); label.textContent = "Selecciona caracol y posición:";
+
+  if(tipo==="posicion"){
+    const label = document.createElement("label");
+    label.textContent="Selecciona caracol y posición:";
     const selectCaracol = document.createElement("select"); selectCaracol.name="caracol";
     participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selectCaracol.appendChild(opt); });
     const selectPos = document.createElement("select"); selectPos.name="posicion";
     [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; selectPos.appendChild(opt); });
-    label.appendChild(selectCaracol); label.appendChild(selectPos); objetivoContainer.appendChild(label);
-  } else if(tipo==="primer_movimiento" || tipo==="primer_salida"){
-    const label = document.createElement("label"); label.textContent="Selecciona caracol:";
+    label.appendChild(selectCaracol); label.appendChild(selectPos);
+    objetivoContainer.appendChild(label);
+  }
+  else if(tipo==="primer_movimiento" || tipo==="primer_salida"){
+    const label = document.createElement("label");
+    label.textContent="Selecciona caracol:";
     const select = document.createElement("select"); select.name="caracol";
     participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; select.appendChild(opt); });
-    label.appendChild(select); objetivoContainer.appendChild(label);
-  } else if(tipo==="tiempo"){
-    const label = document.createElement("label"); label.textContent="Selecciona rango de tiempo:";
+    label.appendChild(select);
+    objetivoContainer.appendChild(label);
+  }
+  else if(tipo==="tiempo"){
+    const label = document.createElement("label");
+    label.textContent="Selecciona rango de tiempo:";
     const select = document.createElement("select"); select.name="tiempo";
     ["0-10","10-20","20-30"].forEach(r=>{ const opt=document.createElement("option"); opt.value=r; opt.textContent=r; select.appendChild(opt); });
-    label.appendChild(select); objetivoContainer.appendChild(label);
-  } else if(tipo==="cuantos_llegan"){
-    const label = document.createElement("label"); label.textContent="Selecciona cuántos llegan:";
+    label.appendChild(select);
+    objetivoContainer.appendChild(label);
+  }
+  else if(tipo==="cuantos_llegan"){
+    const label = document.createElement("label");
+    label.textContent="Selecciona cuántos llegan:";
     const select = document.createElement("select"); select.name="cantidadLlegan";
     [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; select.appendChild(opt); });
-    label.appendChild(select); objetivoContainer.appendChild(label);
+    label.appendChild(select);
+    objetivoContainer.appendChild(label);
   }
 }
+
 actualizarObjetivoInput();
 tipoApuesta.addEventListener("change", actualizarObjetivoInput);
 
-// --- Ranking ---
-function mostrarRanking(){
-  const copia = ranking.map((lech,i)=>({nombre:jugadores[i], lech}));
-  copia.sort((a,b)=>b.lech - a.lech);
-  document.getElementById("ranking").innerText = copia.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
-}
-
-// --- Evento submit ---
-document.getElementById("apuestaForm").addEventListener("submit",(e)=>{
+// --- Enviar apuesta al backend ---
+document.getElementById("apuestaForm").addEventListener("submit", async e=>{
   e.preventDefault();
   const form = e.target;
-  const nombreUsuario = form.usuario.value.trim();
-
-  // Validar nombre
-  const indiceJugador = jugadores.indexOf(nombreUsuario);
-  if(indiceJugador === -1){
-    alert("Nombre de usuario no válido.");
+  const usuario = form.usuario.value.trim();
+  if(!usuariosPermitidos.includes(usuario)){
+    alert("Usuario no válido. Debe ser uno de los predefinidos.");
     return;
   }
 
-  const carrera = parseInt(form.carrera.value)-1;
-  const cantidad = parseInt(form.cantidad.value);
-  const tipo = form.tipo.value;
+  const data = {
+    usuario,
+    carrera: parseInt(form.carrera.value),
+    tipo: form.tipo.value,
+    cantidad: parseInt(form.cantidad.value),
+    objetivo: null
+  };
 
-  // Validar babosas disponibles
-  if(cantidad > babosasCarreras[carrera]){
-    alert(`No quedan suficientes babosas para esta carrera. Restantes: ${babosasCarreras[carrera]}`);
-    return;
+  if(data.tipo==="posicion") data.objetivo={nombre:form.caracol.value,posicion:parseInt(form.posicion.value)};
+  else if(data.tipo==="primer_movimiento"||data.tipo==="primer_salida") data.objetivo=form.caracol.value;
+  else if(data.tipo==="tiempo") data.objetivo=form.tiempo.value;
+  else if(data.tipo==="cuantos_llegan") data.objetivo=parseInt(form.cantidadLlegan.value);
+
+  try {
+    const res = await fetch("http://localhost:3000/apuesta", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if(json.error) alert(json.error);
+    else document.getElementById("apuestaResult").innerText = `Apuesta registrada.\nBabosas restantes: ${json.babosasRestantes}`;
+  } catch(err){
+    console.error(err);
+    alert("Error al enviar la apuesta.");
   }
 
-  // Comprobar si la apuesta coincide con el resultado
-  let acierto = false;
-  const resultado = resultadosCarreras[carrera] || {};
-  if(tipo === "posicion" && resultado.posicion){
-    acierto = resultado.posicion[parseInt(form.posicion.value)-1] === form.caracol.value;
-  } else if(tipo === "primer_movimiento"){
-    acierto = resultado.primer_movimiento === form.caracol.value;
-  } else if(tipo === "primer_salida"){
-    acierto = resultado.primer_salida === form.caracol.value;
-  } else if(tipo === "tiempo"){
-    acierto = resultado.tiempo === form.tiempo.value;
-  } else if(tipo === "cuantos_llegan"){
-    acierto = resultado.cuantos_llegan === parseInt(form.cantidadLlegan.value);
-  }
-
-  // Restar babosas
-  babosasCarreras[carrera] -= cantidad;
-
-  let ganancia = 0;
-  if(acierto){
-    ganancia = cantidad * (tipo==="posicion"?2:3);
-    ranking[indiceJugador] += ganancia;
-  }
-
-  document.getElementById("apuestaResult").innerText = 
-    `Apuesta registrada.\n${acierto?`¡Acertaste! Ganancia: ${ganancia} lechuguines`:"No acertaste, no hay ganancia"}\nBabosas restantes en carrera: ${babosasCarreras[carrera]}`;
-
-  mostrarRanking();
+  actualizarRanking();
 });
 
-// Inicializar ranking
-mostrarRanking();
+// --- Obtener ranking ---
+async function actualizarRanking(){
+  try{
+    const res = await fetch("http://localhost:3000/ranking");
+    const data = await res.json();
+    document.getElementById("ranking").innerText = data.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
+  } catch(err){
+    console.error(err);
+    document.getElementById("ranking").innerText = "Error al cargar ranking";
+  }
+}
+
+document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
+actualizarRanking();
 </script>
 
 </main>
 </body>
 </html>
+
