@@ -37,7 +37,6 @@ const corredores = [
     habilidades: ["Arranque veloz", "Resistencia alta"],
     debilidades: ["Poca maniobrabilidad en curvas"],
     videoCorredor: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    videoEntrenador: "https://www.youtube.com/embed/9bZkp7q19f0"
   },
   {
     nombre: "Sinhuellas",
@@ -45,7 +44,6 @@ const corredores = [
     habilidades: ["Sigiloso", "Evitación de obstáculos"],
     debilidades: ["Velocidad media"],
     videoCorredor: "https://www.youtube.com/embed/5qap5aO4i9A",
-    videoEntrenador: "https://www.youtube.com/embed/L_jWHffIx5E"
   },
   {
     nombre: "Tro Gari",
@@ -53,7 +51,6 @@ const corredores = [
     habilidades: ["Saltos impredecibles", "Acelera sorpresivamente"],
     debilidades: ["Inconstante", "Se distrae fácil"],
     videoCorredor: "https://www.youtube.com/embed/3JZ_D3ELwOQ",
-    videoEntrenador: "https://www.youtube.com/embed/tgbNymZ7vqY"
   },
   {
     nombre: "Arrastrado",
@@ -61,7 +58,6 @@ const corredores = [
     habilidades: ["Constancia", "No se cansa fácilmente"],
     debilidades: ["Muy lento al inicio"],
     videoCorredor: "https://www.youtube.com/embed/V-_O7nl0Ii0",
-    videoEntrenador: "https://www.youtube.com/embed/e-ORhEE9VVg"
   },
   {
     nombre: "Baboso Flash",
@@ -69,7 +65,6 @@ const corredores = [
     habilidades: ["Gran velocidad punta", "Agilidad extrema"],
     debilidades: ["Se resbala en curvas húmedas"],
     videoCorredor: "https://www.youtube.com/embed/fLexgOxsZu0",
-    videoEntrenador: "https://www.youtube.com/embed/uelHwf8o7_U"
   }
 ];
 
@@ -102,16 +97,12 @@ function mostrarCorredores() {
     videoC.className = "video-container";
     videoC.innerHTML = `<strong>Video del corredor:</strong><iframe src="${c.videoCorredor}" frameborder="0" allowfullscreen></iframe>`;
 
-    const videoE = document.createElement("div");
-    videoE.className = "video-container";
-    videoE.innerHTML = `<strong>Video del entrenador:</strong><iframe src="${c.videoEntrenador}" frameborder="0" allowfullscreen></iframe>`;
 
     div.appendChild(nombre);
     div.appendChild(descripcion);
     div.appendChild(habilidades);
     div.appendChild(debilidades);
     div.appendChild(videoC);
-    div.appendChild(videoE);
 
     container.appendChild(div);
   });
