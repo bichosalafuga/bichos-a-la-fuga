@@ -2,115 +2,88 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Corredores Babosos</title>
+<title>Bichos a la fuga – Corredores</title>
+
 <style>
-  body { font-family: sans-serif; margin: 20px; background: #f9f9f9; }
-  h1 { text-align: center; color: #4CAF50; margin-bottom: 30px; }
-  .corredor { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-  .nombre { font-weight: bold; font-size: 1.5em; margin-bottom: 5px; }
-  .descripcion { margin: 5px 0; font-style: italic; color: #555; }
-  .habilidades, .debilidades { margin: 5px 0; }
-  .video-container { margin: 10px 0; }
-  .video-container iframe { width: 100%; height: 315px; border-radius: 8px; }
+body { font-family:sans-serif; margin:0; background:#f8f8f8; }
+header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+main { margin:20px; display:grid;
+       grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+       gap:20px; }
+.corredor {
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 5px rgba(0,0,0,.1);
+  text-align:center;
+}
+.corredor h3 { margin-top:0; }
+.stats { font-size:14px; margin-top:10px; color:#333; }
+footer { text-align:center; margin:40px 0; }
+footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
 </style>
 </head>
+
 <body>
 
-<!-- MENÚ DE NAVEGACIÓN -->
-<nav style="background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px;">
-  <a href="index.html" style="color:white; text-decoration:none; padding:10px 20px;">Inicio</a>
-  <a href="apuestas.html" style="color:white; text-decoration:none; padding:10px 20px;">Apuestas</a>
-  <a href="corredores.html" style="color:white; text-decoration:none; padding:10px 20px;">Corredores</a>
-  <a href="carreras.html" style="color:white; text-decoration:none; padding:10px 20px;">Carreras</a>
-</nav>
+<header>
+  <h1>🐌 Corredores oficiales</h1>
+  <p>Los bichos más rápidos (o menos lentos)</p>
+</header>
 
-<h1>🐌 Corredores Babosos</h1>
+<main id="listaCorredores">
+  Cargando corredores...
+</main>
 
-<div id="corredoresContainer"></div>
+<footer>
+  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
+  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
+  <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
+  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
+</footer>
 
 <script>
-// Lista de corredores con habilidades, debilidades y videos
-const corredores = [
-  {
-    nombre: "Toreto",
-    descripcion: "Rápido y baboso",
-    habilidades: ["Arranque veloz", "Resistencia alta"],
-    debilidades: ["Poca maniobrabilidad en curvas"],
-    videoCorredor: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  },
-  {
-    nombre: "Sinhuellas",
-    descripcion: "No deja rastro",
-    habilidades: ["Sigiloso", "Evitación de obstáculos"],
-    debilidades: ["Velocidad media"],
-    videoCorredor: "https://www.youtube.com/embed/5qap5aO4i9A",
-  },
-  {
-    nombre: "Gari",
-    descripcion: "Ojo loco",
-    habilidades: ["Saltos impredecibles", "Acelera sorpresivamente"],
-    debilidades: ["Inconstante", "Se distrae fácil"],
-    videoCorredor: "https://www.youtube.com/embed/3JZ_D3ELwOQ",
-  },
-  {
-    nombre: "Arrastrado",
-    descripcion: "Lento pero constante",
-    habilidades: ["Constancia", "No se cansa fácilmente"],
-    debilidades: ["Muy lento al inicio"],
-    videoCorredor: "https://www.youtube.com/embed/V-_O7nl0Ii0",
-  },
-  {
-    nombre: "Baboso Flash",
-    descripcion: "Rápido y resbaladizo",
-    habilidades: ["Gran velocidad punta", "Agilidad extrema"],
-    debilidades: ["Se resbala en curvas húmedas"],
-    videoCorredor: "https://www.youtube.com/embed/fLexgOxsZu0",
+/* ================= CONFIG ================= */
+const API = "https://bichos-backend.onrender.com";
+
+/* ================= CARGAR CORREDORES ================= */
+async function cargarCorredores(){
+  const cont = document.getElementById("listaCorredores");
+
+  try{
+    const res = await fetch(`${API}/corredores`);
+    const corredores = await res.json();
+
+    cont.innerHTML = "";
+
+    corredores.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "corredor";
+
+      div.innerHTML = `
+        <h3>${c.nombre}</h3>
+        <p>${c.descripcion || "Caracol profesional"}</p>
+
+        <div class="stats">
+          <p>🏆 Victorias: ${c.victorias ?? 0}</p>
+          <p>🥈 Podios: ${c.podios ?? 0}</p>
+          <p>🏁 Carreras: ${c.carreras ?? 0}</p>
+          <p>⚡ Primer movimiento: ${c.primer_movimiento ?? 0}</p>
+          <p>💥 Primer en salirse: ${c.primer_salida ?? 0}</p>
+        </div>
+      `;
+
+      cont.appendChild(div);
+    });
+
+  }catch(e){
+    cont.textContent = "❌ Error cargando corredores";
   }
-];
-
-// Mostrar corredores en el contenedor
-function mostrarCorredores() {
-  const container = document.getElementById("corredoresContainer");
-  container.innerHTML = "";
-
-  corredores.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "corredor";
-
-    const nombre = document.createElement("div");
-    nombre.className = "nombre";
-    nombre.textContent = c.nombre;
-
-    const descripcion = document.createElement("div");
-    descripcion.className = "descripcion";
-    descripcion.textContent = c.descripcion;
-
-    const habilidades = document.createElement("div");
-    habilidades.className = "habilidades";
-    habilidades.textContent = `Habilidades: ${c.habilidades.join(", ")}`;
-
-    const debilidades = document.createElement("div");
-    debilidades.className = "debilidades";
-    debilidades.textContent = `Debilidades: ${c.debilidades.join(", ")}`;
-
-    const videoC = document.createElement("div");
-    videoC.className = "video-container";
-    videoC.innerHTML = `<strong>Video del corredor:</strong><iframe src="${c.videoCorredor}" frameborder="0" allowfullscreen></iframe>`;
-
-
-    div.appendChild(nombre);
-    div.appendChild(descripcion);
-    div.appendChild(habilidades);
-    div.appendChild(debilidades);
-    div.appendChild(videoC);
-
-    container.appendChild(div);
-  });
 }
 
-// Mostrar al cargar
-mostrarCorredores();
+cargarCorredores();
 </script>
 
 </body>
 </html>
+
