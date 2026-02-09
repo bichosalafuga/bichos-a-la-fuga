@@ -2,114 +2,194 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Bichos a la fuga - Principal</title>
+<title>Bichos a la fuga</title>
+
 <style>
-body { font-family: sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
-header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
-nav { background: #333; display: flex; justify-content: center; }
-nav a { color: white; text-decoration: none; padding: 10px 20px; }
-nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
-main { margin: 20px; }
-fieldset { margin-bottom: 20px; padding: 10px; }
-pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
-button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-button:hover { background-color: #45a049; }
-h2 { margin-top: 30px; }
-.video-container { margin: 20px 0; }
-.video-container iframe { width: 100%; height: 315px; }
-.button-container { text-align: center; margin: 30px 0; }
-.social-links { text-align: center; margin: 30px 0; }
-.social-links a { margin: 0 10px; font-size: 20px; text-decoration: none; color: #4CAF50; }
-.social-links a:hover { color: #388E3C; }
-.video-title { font-weight: bold; margin-bottom: 5px; }
-.video-desc { font-style: italic; margin-bottom: 10px; color: #555; }
+body { font-family:sans-serif; margin:0; background:#f8f8f8; line-height:1.6; }
+header { background:#4CAF50; color:white; padding:30px; text-align:center; }
+section { background:#fff; margin:20px; padding:20px;
+          border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,.1); }
+h2 { margin-top:0; }
+ul { padding-left:20px; }
+.ranking li { margin:5px 0; }
+nav { text-align:center; margin:20px; }
+nav a { margin:0 10px; color:#4CAF50; text-decoration:none; font-weight:bold; }
+footer { text-align:center; margin:40px 20px; font-size:14px; color:#555; }
+footer a { margin:0 8px; color:#4CAF50; text-decoration:none; }
+.aviso { background:#fff3cd; border-left:6px solid #ffc107; }
 </style>
 </head>
+
 <body>
 
 <header>
   <h1>🐌 Bichos a la fuga</h1>
-  <p>El campeonato más lento del mundo</p>
+  <p><strong>El campeonato más lento del mundo</strong></p>
 </header>
 
-<!-- MENÚ DE NAVEGACIÓN -->
 <nav>
-  <a href="index.html">Inicio</a>
-  <a href="apuestas.html">Apuestas</a>
   <a href="corredores.html">Corredores</a>
   <a href="carreras.html">Carreras</a>
+  <a href="apuestas.html">Apostar</a>
 </nav>
 
-<main>
+<section>
+  <p>
+    <strong>Bichos a la fuga</strong> es un juego privado con fines lúdicos y humorísticos
+    basado en carreras de animales grabadas y emitidas en directo a través de YouTube.
+  </p>
+  <p>
+    Los usuarios pueden realizar <strong>apuestas ficticias</strong> utilizando una
+    moneda virtual <strong>sin ningún valor económico</strong>.
+  </p>
+</section>
 
-<h2>Cómo funciona</h2>
-<p>
-El campeonato consiste en 8 carreras de babosas muy lentas. Los usuarios pueden participar realizando apuestas sobre los resultados. 
-A continuación te explicamos cómo funciona el sistema:
-</p>
-<ul>
-  <li><strong>Apuestas disponibles:</strong> posición final de una babosa, quién se mueve primero, quién se sale primero, tiempo de llegada o cuántos llegan a la meta.</li>
-  <li><strong>Babosas:</strong> cada carrera tiene un total de 100 babosas que se reparten entre los usuarios que apuesten.</li>
-  <li><strong>Conversión a lechuguines:</strong> si aciertas, tus babosas se convierten en lechuguines multiplicados según la dificultad de la apuesta. Ejemplo: acertar la posición final duplica las babosas, otras apuestas triplican.</li>
-  <li><strong>Acumulación:</strong> los lechuguines se acumulan a lo largo de las 8 carreras.</li>
-  <li><strong>Ranking:</strong> se muestran solo los usuarios activos con lechuguines > 0, ordenados de mayor a menor.</li>
-</ul>
+<section>
+  <h2>🎯 ¿Qué es Bichos a la fuga?</h2>
+  <ul>
+    <li>Web privada</li>
+    <li>Carreras de caracoles (y otros bichos) retransmitidas en directo</li>
+    <li>Apuestas con moneda ficticia</li>
+    <li>Rankings y temporadas</li>
+    <li>Mucho humor y narrativa absurda</li>
+  </ul>
+</section>
 
-<!-- Video explicativo 1 -->
-<div class="video-container">
-  <div class="video-title">📌 ¿Qué es Bichos a la fuga?</div>
-  <div class="video-desc">Un vistazo al campeonato de babosas, cómo apostar y reglas básicas.</div>
-  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo 1" frameborder="0" allowfullscreen></iframe>
-</div>
+<section>
+  <h2>💸 Moneda ficticia</h2>
+  <p>El sistema utiliza dos monedas completamente ficticias:</p>
+  <ul>
+    <li><strong>Babosas 🐌</strong> → moneda de apuesta</li>
+    <li><strong>Lechuguines 🥬</strong> → puntuación acumulada de temporada</li>
+  </ul>
+  <p><strong>Estas monedas:</strong></p>
+  <ul>
+    <li>No tienen valor económico</li>
+    <li>No pueden comprarse</li>
+    <li>No pueden venderse</li>
+    <li>No pueden intercambiarse por premios reales</li>
+  </ul>
+</section>
 
-<!-- Video explicativo 2 -->
-<div class="video-container">
-  <div class="video-title">🎥 Contenido Extra</div>
-  <div class="video-desc">Entrevista al Safety Car, mejores escapadas, entrenamientos y curiosidades del campeonato.</div>
-  <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" title="Video explicativo 2" frameborder="0" allowfullscreen></iframe>
-</div>
+<section class="aviso">
+  <h2>🚫 Qué NO es este proyecto</h2>
+  <ul>
+    <li>❌ No es una plataforma de apuestas reales</li>
+    <li>❌ No permite pagos, donaciones ni recargas</li>
+    <li>❌ No ofrece premios físicos ni económicos</li>
+    <li>❌ No promueve el juego con dinero</li>
+    <li>❌ No es un casino ni casa de apuestas</li>
+  </ul>
+</section>
 
-<!-- Botón centrado -->
-<div class="button-container">
-  <button onclick="window.location.href='apuestas.html'">🎯 Hacer Apuestas</button>
-</div>
+<section>
+  <h2>📺 Streaming y chat</h2>
+  <ul>
+    <li>Las carreras se retransmiten a través de YouTube Live</li>
+    <li>El chat en directo se realiza exclusivamente en YouTube</li>
+    <li>La web solo incrusta el vídeo y el chat oficial</li>
+  </ul>
+</section>
 
-<fieldset>
-  <legend>Ranking actual</legend>
-  <pre id="ranking">Cargando...</pre>
-  <button id="refreshRanking">Actualizar ranking</button>
-</fieldset>
+<section>
+  <h2>🐌 Temporadas y carreras</h2>
+  <p>El proyecto se organiza en temporadas.</p>
+  <p>Cada carrera incluye:</p>
+  <ul>
+    <li>Vídeo explicativo</li>
+    <li>Presentación de participantes</li>
+    <li>Contenido extra humorístico</li>
+    <li>Carrera en directo</li>
+    <li>Resumen post-carrera</li>
+  </ul>
+  <p>
+    Al final de la temporada, el usuario con más <strong>lechuguines</strong>
+    lidera el ranking.
+  </p>
+</section>
 
-<!-- Redes sociales -->
-<div class="social-links">
-  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">📸 Instagram</a>
-  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">🎵 TikTok</a>
-  <a href="https://x.com/bichosalafuga" target="_blank">🎵 X</a>
-  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">▶️ YouTube Canal</a>
-</div>
+<section>
+  <h2>🏆 Ranking de temporada (Lechuguines 🥬)</h2>
+  <ul id="ranking" class="ranking">
+    Cargando ranking...
+  </ul>
+</section>
+
+<section>
+  <h2>🔐 Acceso</h2>
+  <ul>
+    <li>Acceso privado</li>
+    <li>Solo por invitación</li>
+    <li>No indexado para uso público masivo</li>
+  </ul>
+</section>
+
+<section class="aviso">
+  <h2>⚖️ Aviso legal</h2>
+  <p>
+    Juego privado con fines lúdicos.<br>
+    Sistema de apuestas con moneda ficticia sin valor económico.<br>
+    No se permiten pagos, premios ni beneficios reales.
+  </p>
+  <p>
+    Este proyecto se desarrolla con fines experimentales, creativos
+    y de entretenimiento.
+  </p>
+</section>
+
+<section>
+  <h2>🛠️ Tecnologías utilizadas</h2>
+  <ul>
+    <li>HTML, CSS y JavaScript</li>
+    <li>GitHub Pages (hosting gratuito)</li>
+    <li>YouTube Live (streaming)</li>
+    <li>Backend ligero para gestión de carreras y apuestas ficticias</li>
+  </ul>
+</section>
+
+<section>
+  <h2>🐌 Nota final</h2>
+  <p>
+    Si has llegado hasta aquí:<br>
+    relájate, disfruta del barro y que gane el caracol más decidido.
+  </p>
+</section>
+
+<footer>
+  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
+  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
+  <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
+  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
+</footer>
 
 <script>
-// --- RANKING DE USUARIOS ACTIVOS ---
-let ranking = [
-  {usuario:"Jony", lechuguines:120},
-  {usuario:"Juanma", lechuguines:80},
-  {usuario:"Andrea", lechuguines:0},      // inactivo, no aparecerá
-  {usuario:"Jorge", lechuguines:50}
-];
+/* ================= CONFIG ================= */
+const API = "https://bichos-backend.onrender.com";
 
-// Mostrar solo usuarios activos (lechuguines > 0) y ordenados de mayor a menor
-function actualizarRanking(){
-  const activos = ranking.filter(u => u.lechuguines > 0);
-  activos.sort((a,b) => b.lechuguines - a.lechuguines);
-  document.getElementById("ranking").innerText = activos.map(u => `${u.usuario}: ${u.lechuguines} lechuguines`).join("\n");
+/* ================= RANKING ================= */
+async function cargarRanking(){
+  const ul = document.getElementById("ranking");
+  try{
+    const res = await fetch(`${API}/ranking`);
+    const ranking = await res.json();
+
+    ul.innerHTML = "";
+    ranking.forEach((r,i)=>{
+      const li = document.createElement("li");
+      li.textContent = `#${i+1} ${r.nombre} – ${r.lechuguines} 🥬`;
+      ul.appendChild(li);
+    });
+  }catch(e){
+    ul.textContent = "❌ No se pudo cargar el ranking";
+  }
 }
 
-// Botón para actualizar ranking
-document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
-
-// Inicializar ranking al cargar
-actualizarRanking();
+cargarRanking();
 </script>
+
+</body>
+</html>
+
 
 </main>
 </body>
