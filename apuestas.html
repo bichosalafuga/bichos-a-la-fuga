@@ -2,30 +2,27 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>🐌 Bichos a la fuga - Apostar</title>
+<title>🐌 Apostar en Bichos a la fuga</title>
 <style>
 body { font-family:sans-serif; margin:20px; background:#f8f8f8; }
-header { text-align:center; margin-bottom:20px; }
 fieldset { margin-bottom:20px; padding:15px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
 label { display:block; margin-bottom:10px; }
-select,input { padding:5px; font-size:16px; margin-top:5px; width:100%; max-width:400px; }
+select,input { padding:5px; font-size:16px; margin-top:5px; }
 button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
 button:hover { background-color:#45a049; }
+pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; border-radius:5px; margin-top:10px; }
 nav { background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px; }
 nav a { color:white; text-decoration:none; padding:10px 20px; }
 nav a:hover { background-color:#4CAF50; border-radius:5px; }
 .social-links { margin-top: 20px; text-align:center; }
 .social-links a { margin-right: 10px; text-decoration:none; color:#4CAF50; font-weight:bold; }
-#rankingVisual { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:15px; }
-.ranking-card { background:#fff; padding:15px 20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); text-align:center; min-width:150px; }
-.ranking-card h4 { margin:5px 0; }
-.ranking-card p { margin:0; font-weight:bold; color:#4CAF50; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🐌 Apostar en Bichos a la fuga</h1>
+<h1>🐌 Apostar en Bichos a la fuga</h1>
+<p>Rellena tus datos y envía la apuesta por correo</p>
 </header>
 
 <nav>
@@ -73,136 +70,23 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
       <input type="number" name="cantidad" min="1" required>
     </label>
 
-    <button type="submit">Apostar</button>
+    <button type="submit">Enviar apuesta por correo</button>
   </form>
   <pre id="apuestaResult"></pre>
-</fieldset>
-
-<fieldset>
-  <legend>Ranking actual 🥬</legend>
-  <div id="rankingVisual">Cargando ranking...</div>
-  <button id="refreshRanking">Actualizar ranking</button>
 </fieldset>
 
 <div class="social-links">
   <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a>
   <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a>
-  <a href="x.com/bichosalafuga" target="_blank">X</a>
+  <a href="https://x.com/bichosalafuga" target="_blank">X</a>
   <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
 </div>
 
-<script>
-// Datos de ejemplo de participantes por carrera
-const datosCarreras = {
-  1:{participantes:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"]},
-  2:{participantes:["Sinhuellas","Toreto","Gari","Arrastrado","Baboso Flash"]},
-  3:{participantes:["Gari","Sinhuellas","Toreto","Arrastrado","Baboso Flash"]},
-  4:{participantes:["Toreto","Gari","Sinhuellas","Arrastrado","Baboso Flash"]},
-  5:{participantes:["Sinhuellas","Gari","Toreto","Arrastrado","Baboso Flash"]},
-  6:{participantes:["Gari","Toreto","Sinhuellas","Arrastrado","Baboso Flash"]},
-  7:{participantes:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"]},
-  8:{participantes:["Baboso Flash","Toreto","Sinhuellas","Gari","Arrastrado"]}
-};
-
-const tipoApuesta = document.getElementById("tipoApuesta");
-const objetivoContainer = document.getElementById("objetivoContainer");
-const selectCarrera = document.getElementById("selectCarrera");
-
-function actualizarObjetivoInput(){
-  const tipo = tipoApuesta.value;
-  const carrera = selectCarrera.value;
-  const datos = datosCarreras[carrera];
-  if(!datos) return;
-  objetivoContainer.innerHTML="";
-  
-  if(tipo==="posicion"){
-    const label = document.createElement("label"); label.textContent="Selecciona caracol y posición:";
-    const selC = document.createElement("select"); selC.name="caracol";
-    datos.participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selC.appendChild(opt); });
-    const selP = document.createElement("select"); selP.name="posicion";
-    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; selP.appendChild(opt); });
-    label.appendChild(selC); label.appendChild(selP);
-    objetivoContainer.appendChild(label);
-  } else if(tipo==="primer_movimiento"||tipo==="primer_salida"){
-    const label=document.createElement("label"); label.textContent="Selecciona caracol:";
-    const sel=document.createElement("select"); sel.name="caracol";
-    datos.participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; sel.appendChild(opt); });
-    label.appendChild(sel); objetivoContainer.appendChild(label);
-  } else if(tipo==="tiempo"){
-    const label=document.createElement("label"); label.textContent="Selecciona rango de tiempo:";
-    const sel=document.createElement("select"); sel.name="tiempo";
-    ["0-10","10-20","20-30"].forEach(r=>{ const opt=document.createElement("option"); opt.value=r; opt.textContent=r; sel.appendChild(opt); });
-    label.appendChild(sel); objetivoContainer.appendChild(label);
-  } else if(tipo==="cuantos_llegan"){
-    const label=document.createElement("label"); label.textContent="Selecciona cuántos llegan:";
-    const sel=document.createElement("select"); sel.name="cantidadLlegan";
-    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; sel.appendChild(opt); });
-    label.appendChild(sel); objetivoContainer.appendChild(label);
-  }
-}
-
-tipoApuesta.addEventListener("change", actualizarObjetivoInput);
-selectCarrera.addEventListener("change", actualizarObjetivoInput);
-actualizarObjetivoInput();
-
-// Enviar apuesta por correo
-document.getElementById("apuestaForm").addEventListener("submit", async e=>{
-  e.preventDefault();
-  const form = e.target;
-  const usuario = form.usuario.value.trim();
-  const carrera = form.carrera.value;
-  const tipo = form.tipo.value;
-  const cantidad = form.cantidad.value;
-  let objetivo=null;
-  if(tipo==="posicion") objetivo={nombre:form.caracol.value,posicion:form.posicion.value};
-  else if(tipo==="primer_movimiento"||tipo==="primer_salida") objetivo=form.caracol.value;
-  else if(tipo==="tiempo") objetivo=form.tiempo.value;
-  else if(tipo==="cuantos_llegan") objetivo=form.cantidadLlegan.value;
-
-  // Datos de la apuesta
-  const datosApuesta = {usuario,carrera,tipo,objetivo,cantidad};
-
-  // Enviar correo vía backend
-  try{
-    await fetch('https://bichos-backend.onrender.com/enviar-apuesta',{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(datosApuesta)
-    });
-    document.getElementById("apuestaResult").innerText="Apuesta enviada correctamente a bichosalafuga@gmail.com.";
-  }catch(e){
-    console.error(e);
-    document.getElementById("apuestaResult").innerText="Error al enviar la apuesta.";
-  }
-});
-
-// Ranking visual
-async function actualizarRanking(){
-  try{
-    const res = await fetch('https://bichos-backend.onrender.com/ranking');
-    const data = await res.json();
-    const container = document.getElementById("rankingVisual");
-    container.innerHTML="";
-    data.forEach(u=>{
-      const card = document.createElement("div");
-      card.className="ranking-card";
-      card.innerHTML=`<h4>${u.nombre}</h4><p>${u.lech} 🥬</p>`;
-      container.appendChild(card);
-    });
-  }catch(e){
-    console.error(e);
-    document.getElementById("rankingVisual").innerText="Error al cargar ranking.";
-  }
-}
-
-document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
-actualizarRanking();
-</script>
+<script src="index.js"></script>
 
 </main>
 </body>
 </html>
-
 
 
 
