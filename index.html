@@ -2,232 +2,201 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Bichos a la fuga</title>
-
+<title>🐌 Bichos a la fuga</title>
 <style>
-body {
-  font-family:sans-serif;
-  margin:0;
-  background:#f8f8f8;
-  line-height:1.6;
-}
-header {
-  background:#4CAF50;
-  color:white;
-  padding:30px;
-  text-align:center;
-}
-section {
-  background:#fff;
-  margin:20px;
-  padding:20px;
-  border-radius:10px;
-  box-shadow:0 2px 5px rgba(0,0,0,.1);
-}
-h2 { margin-top:0; }
-ul { padding-left:20px; }
-nav {
-  text-align:center;
-  margin:20px;
-}
-nav a {
-  margin:0 10px;
-  color:#4CAF50;
-  text-decoration:none;
-  font-weight:bold;
-}
-footer {
-  text-align:center;
-  margin:40px 20px;
-  font-size:14px;
-  color:#555;
-}
-footer a {
-  margin:0 8px;
-  color:#4CAF50;
-  text-decoration:none;
-}
-.aviso {
-  background:#fff3cd;
-  border-left:6px solid #ffc107;
-}
-
-/* ===== RANKING ===== */
-.ranking {
-  list-style:none;
-  padding:0;
-}
-.ranking li {
-  background:#f0f0f0;
-  margin:8px 0;
-  padding:10px 15px;
-  border-radius:8px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  opacity:0;
-  transform:translateY(10px);
-  animation:entrar .5s forwards;
-}
-.ranking li:nth-child(1) { background:#d4edda; font-weight:bold; }
-.ranking li:nth-child(2) { background:#e2e3e5; }
-.ranking li:nth-child(3) { background:#fff3cd; }
-
-@keyframes entrar {
-  to {
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-.posicion {
-  font-weight:bold;
-  margin-right:10px;
-}
-.puntos {
-  font-weight:bold;
-}
-
-/* ===== VIDEO ===== */
-.video-wrapper {
-  position:relative;
-  padding-top:56.25%;
-  background:#000;
-  border-radius:10px;
-  overflow:hidden;
-}
-.video-wrapper iframe,
-.video-wrapper .placeholder {
-  position:absolute;
-  top:0; left:0;
-  width:100%;
-  height:100%;
-}
-.placeholder {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:18px;
-  background:linear-gradient(135deg,#333,#111);
-}
+body { font-family: sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
+nav { background: #333; display: flex; justify-content: center; }
+nav a { color: white; text-decoration: none; padding: 10px 20px; }
+nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
+main { margin: 20px; }
+fieldset { margin-bottom: 20px; padding: 10px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; border-radius: 5px; }
+button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-top: 10px; }
+button:hover { background-color: #45a049; }
+h2 { margin-top: 30px; }
+.video-container { margin: 20px 0; }
+.video-container iframe { width: 100%; height: 315px; }
+.button-container { text-align: center; margin: 30px 0; }
+.social-links { text-align: center; margin: 30px 0; }
+.social-links a { margin: 0 10px; font-size: 20px; text-decoration: none; color: #4CAF50; }
+.social-links a:hover { color: #388E3C; }
+.video-title { font-weight: bold; margin-bottom: 5px; }
+.video-desc { font-style: italic; margin-bottom: 10px; color: #555; }
+.ranking-animated p { margin: 5px 0; font-weight: bold; font-size: 1.1em; transition: transform 0.5s, color 0.5s; }
+.ranking-animated p:hover { transform: scale(1.05); color: #388E3C; }
 </style>
 </head>
-
 <body>
 
 <header>
   <h1>🐌 Bichos a la fuga</h1>
-  <p><strong>El campeonato más lento del mundo</strong></p>
+  <p>El campeonato más lento del mundo.</p>
 </header>
 
+<!-- MENÚ DE NAVEGACIÓN -->
 <nav>
+  <a href="index.html">Inicio</a>
+  <a href="apuestas.html">Apuestas</a>
   <a href="corredores.html">Corredores</a>
   <a href="carreras.html">Carreras</a>
-  <a href="apuestas.html">Apostar</a>
 </nav>
 
-<section>
-  <p>
-    <strong>Bichos a la fuga</strong> es un juego privado con fines lúdicos y humorísticos
-    basado en carreras de animales grabadas y emitidas en directo a través de YouTube.
-  </p>
-  <p>
-    Los usuarios pueden realizar <strong>apuestas ficticias</strong> utilizando una
-    moneda virtual <strong>sin ningún valor económico</strong>.
-  </p>
-</section>
+<main>
+<h2>🎯 ¿Qué es Bichos a la fuga?</h2>
+<p>Bichos a la fuga es un juego privado con fines lúdicos y humorísticos basado en carreras de animales grabadas y emitidas en directo a través de YouTube.</p>
+<ul>
+  <li>Una web privada</li>
+  <li>Carreras de caracoles (y otros bichos) retransmitidas en directo</li>
+  <li>Apuestas con moneda ficticia</li>
+  <li>Rankings y temporadas</li>
+  <li>Mucho humor y narrativa absurda</li>
+</ul>
 
-<section>
-  <h2>📺 Vídeo explicativo</h2>
+<h2>💸 Moneda ficticia</h2>
+<p>El sistema utiliza dos monedas completamente ficticias:</p>
+<ul>
+  <li>Babosas 🐌 → moneda de apuesta</li>
+  <li>Lechuguines 🥬 → puntuación acumulada de temporada</li>
+</ul>
+<p>⚠️ Estas monedas no tienen valor económico, no pueden comprarse, venderse ni intercambiarse por premios reales.</p>
 
-  <!-- 🔴 Cuando haya vídeo, sustituir el div placeholder por iframe -->
-  <!--
-  <div class="video-wrapper">
-    <iframe src="https://www.youtube.com/embed/ID_DEL_VIDEO"
-            frameborder="0" allowfullscreen></iframe>
-  </div>
-  -->
+<h2>🚫 Qué NO es este proyecto</h2>
+<ul>
+  <li>❌ No es una plataforma de apuestas reales</li>
+  <li>❌ No permite pagos, donaciones ni recargas</li>
+  <li>❌ No ofrece premios físicos ni económicos</li>
+  <li>❌ No promueve el juego con dinero</li>
+  <li>❌ No es un casino ni casa de apuestas</li>
+</ul>
 
-  <div class="video-wrapper">
-    <div class="placeholder">
-      🎬 Próximamente: vídeo explicativo de la temporada
-    </div>
-  </div>
-</section>
+<h2>📺 Streaming y chat</h2>
+<p>Las carreras se retransmiten a través de YouTube Live. El chat en directo se realiza exclusivamente en YouTube. La web solo incrusta el vídeo y el chat oficial.</p>
 
-<section>
-  <h2>🎯 ¿Qué es Bichos a la fuga?</h2>
-  <ul>
-    <li>Web privada</li>
-    <li>Carreras de caracoles (y otros bichos) retransmitidas en directo</li>
-    <li>Apuestas con moneda ficticia</li>
-    <li>Rankings y temporadas</li>
-    <li>Mucho humor y narrativa absurda</li>
-  </ul>
-</section>
+<h2>🐌 Temporadas y carreras</h2>
+<p>El proyecto se organiza en temporadas. Cada carrera incluye:</p>
+<ul>
+  <li>Vídeo explicativo</li>
+  <li>Presentación de participantes</li>
+  <li>Contenido extra humorístico</li>
+  <li>Carrera en directo</li>
+  <li>Resumen post-carrera</li>
+</ul>
+<p>Al final de la temporada, el usuario con más lechuguines lidera el ranking.</p>
 
-<section>
-  <h2>🏆 Ranking de temporada (Lechuguines 🥬)</h2>
-  <ul id="ranking" class="ranking">
-    Cargando ranking...
-  </ul>
-</section>
+<h2>🔐 Acceso</h2>
+<p>Acceso privado, solo por invitación. No indexado para uso público masivo.</p>
 
-<section class="aviso">
-  <h2>⚖️ Aviso legal</h2>
-  <p>
-    Juego privado con fines lúdicos.<br>
-    Sistema de apuestas con moneda ficticia sin valor económico.<br>
-    No se permiten pagos, premios ni beneficios reales.
-  </p>
-</section>
+<h2>⚖️ Aviso legal</h2>
+<p>Juego privado con fines lúdicos. Sistema de apuestas con moneda ficticia sin valor económico. No se permiten pagos, premios ni beneficios reales. Proyecto con fines experimentales, creativos y de entretenimiento.</p>
 
-<section>
-  <h2>🐌 Nota final</h2>
-  <p>
-    Si has llegado hasta aquí:<br>
-    relájate, disfruta del barro y que gane el caracol más decidido.
-  </p>
-</section>
+<h2>🛠️ Tecnologías utilizadas</h2>
+<ul>
+  <li>HTML, CSS y JavaScript</li>
+  <li>GitHub Pages (hosting gratuito)</li>
+  <li>YouTube Live (streaming)</li>
+  <li>Backend ligero para gestión de carreras y apuestas ficticias</li>
+</ul>
 
-<footer>
-  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
-  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
-  <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
-  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
-</footer>
+<h2>🐌 Nota final</h2>
+<p>Si has llegado hasta aquí: relájate, disfruta del barro y que gane el caracol más decidido.</p>
+
+<!-- Video explicativo -->
+<div class="video-container">
+  <div class="video-title">📌 Video explicativo principal</div>
+  <div class="video-desc">Vistazo al campeonato de babosas, cómo apostar y reglas básicas.</div>
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div class="video-container">
+  <div class="video-title">🎥 Contenido extra</div>
+  <div class="video-desc">Entrevista al Safety Car, mejores escapadas, entrenamientos y curiosidades del campeonato.</div>
+  <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" title="Video extra" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<!-- Botón de apuestas -->
+<div class="button-container">
+  <button onclick="window.location.href='apuestas.html'">🎯 Hacer Apuestas</button>
+</div>
+
+<!-- Ranking animado -->
+<fieldset>
+  <legend>Ranking actual 🥬</legend>
+  <div id="ranking" class="ranking-animated">Cargando ranking...</div>
+  <button id="refreshRanking">Actualizar ranking</button>
+</fieldset>
+
+<!-- Últimas carreras -->
+<fieldset>
+  <legend>Últimas carreras 🐌</legend>
+  <div id="ultimasCarreras">Cargando carreras...</div>
+</fieldset>
+
+<!-- Redes sociales -->
+<div class="social-links">
+  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">📸 Instagram</a>
+  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">🎵 TikTok</a>
+  <a href="https://x.com/bichosalafuga" target="_blank">🎵 X</a>
+  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">▶️ YouTube Canal</a>
+</div>
 
 <script>
-/* ================= CONFIG ================= */
-const API = "https://bichos-backend.onrender.com";
+// URL del backend
+const backendURL = "https://bichos-backend.onrender.com";
 
-/* ================= RANKING ANIMADO ================= */
-async function cargarRanking(){
-  const ul = document.getElementById("ranking");
-  try{
-    const res = await fetch(`${API}/ranking`);
-    const ranking = await res.json();
-
-    ul.innerHTML = "";
-    ranking.forEach((r,i)=>{
-      const li = document.createElement("li");
-      li.style.animationDelay = `${i * 0.1}s`;
-      li.innerHTML = `
-        <span class="posicion">#${i+1}</span>
-        <span>${r.nombre}</span>
-        <span class="puntos">${r.lechuguines} 🥬</span>
-      `;
-      ul.appendChild(li);
-    });
-
-  }catch(e){
-    ul.textContent = "❌ No se pudo cargar el ranking";
-  }
+// Función para cargar ranking
+async function cargarRanking() {
+    try {
+        const res = await fetch(`${backendURL}/ranking`);
+        const data = await res.json();
+        const container = document.getElementById("ranking");
+        container.innerHTML = "";
+        data.forEach((u,i)=>{
+            const p = document.createElement("p");
+            p.textContent = `#${i+1} ${u.nombre} - ${u.lech} lechuguines`;
+            container.appendChild(p);
+        });
+    } catch(e) {
+        console.error(e);
+        document.getElementById("ranking").textContent = "Error cargando ranking";
+    }
 }
 
-cargarRanking();
+// Función para cargar últimas carreras
+async function cargarUltimasCarreras() {
+    try {
+        const res = await fetch(`${backendURL}/carreras`);
+        const carreras = await res.json();
+        const container = document.getElementById("ultimasCarreras");
+        container.innerHTML = "";
+        if(carreras.length===0){
+            container.textContent = "No hay carreras disponibles";
+            return;
+        }
+        carreras.forEach(c=>{
+            const div = document.createElement("div");
+            div.style.marginBottom = "15px";
+            div.innerHTML = `
+                <h3>${c.nombre}</h3>
+                <p>Ganador: ${c.ganador || "Pendiente"}</p>
+                <p>Participantes: ${c.participantes.join(", ")}</p>
+            `;
+            container.appendChild(div);
+        });
+    } catch(e) {
+        console.error(e);
+        document.getElementById("ultimasCarreras").textContent = "Error cargando las carreras";
+    }
+}
+
+// Inicializar
+document.addEventListener("DOMContentLoaded", ()=>{
+    cargarRanking();
+    cargarUltimasCarreras();
+    document.getElementById("refreshRanking").addEventListener("click", cargarRanking);
+});
 </script>
 
+</main>
 </body>
 </html>
