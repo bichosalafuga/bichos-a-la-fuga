@@ -60,7 +60,7 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
         <li>Haz clic en <em>Enviar apuesta por correo</em>.</li>
       </ol>
     </li>
-    <li>Debajo se mostrará el <strong>ranking actualizado por lechuguines</strong>.</li>
+    <li>El <strong>ranking</strong> se actualizará manualmente una vez finalice la carrera.</li>
   </ul>
 </fieldset>
 
@@ -106,10 +106,15 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
   <pre id="apuestaResult"></pre>
 </fieldset>
 
-<!-- Ranking -->
+<!-- Ranking manual -->
 <div id="ranking">
-  <h3>🏆 Ranking actualizado por lechuguines</h3>
-  <ul id="rankingList"></ul>
+  <h3>🏆 Ranking (actualizar manualmente después de la carrera)</h3>
+  <ul id="rankingList">
+    <li>1. Usuario1 - 50 lechuguines</li>
+    <li>2. Usuario2 - 45 lechuguines</li>
+    <li>3. Usuario3 - 40 lechuguines</li>
+    <!-- Aquí se actualizarán los 30 primeros manualmente -->
+  </ul>
 </div>
 
 <div class="social-links">
@@ -124,7 +129,6 @@ const tipoApuesta = document.getElementById('tipoApuesta');
 const objetivoContainer = document.getElementById('objetivoContainer');
 const apuestaForm = document.getElementById('apuestaForm');
 const apuestaResult = document.getElementById('apuestaResult');
-const rankingList = document.getElementById('rankingList');
 
 // Multiplicadores
 const multiplicadores = {
@@ -135,13 +139,23 @@ const multiplicadores = {
   cuantos_llegan: 2
 };
 
-// Array para ranking
-let ranking = [];
+// Nombres reales de corredores por carrera
+const corredoresPorCarrera = {
+  1: ["Caracolín", "Babosín", "Turbo", "Resbalín", "Pegadín"],
+  2: ["Deslizante", "Escurridizo", "Gomoso", "Babosito", "Rápido"],
+  3: ["Slimey", "BabosaMax", "Caracolina", "Pegajoso", "Rápidín"],
+  4: ["TurboCarac", "Babuchín", "Rasposo", "Resbaladín", "Lento"],
+  5: ["LentoMax", "Escalador", "BabosaCool", "Slimy", "Coracel"],
+  6: ["SúperRápido", "Resbalín", "Caracolito", "Babosillo", "TurboMax"],
+  7: ["MetaCarac", "Babosón", "RápidoBabosa", "Slimer", "Gomoso"],
+  8: ["Legendario", "CaracResbal", "BabositoX", "TurboLegend", "Pegaso"]
+};
 
 // Generar campo dinámico según tipo de apuesta
 function actualizarObjetivo() {
   const tipo = tipoApuesta.value;
   let html = '';
+  const carreraId = parseInt(document.getElementById("selectCarrera").value);
   switch(tipo) {
     case 'posicion':
       html = `<label>Selecciona posición:
@@ -155,14 +169,11 @@ function actualizarObjetivo() {
     case 'primer_movimiento':
     case 'primer_salida':
       html = `<label>Selecciona corredor:
-                <select name="objetivo" required>
-                  <option value="1">Corredor 1</option>
-                  <option value="2">Corredor 2</option>
-                  <option value="3">Corredor 3</option>
-                  <option value="4">Corredor 4</option>
-                  <option value="5">Corredor 5</option>
-                </select>
-              </label>`;
+                <select name="objetivo" required>`;
+      corredoresPorCarrera[carreraId].forEach(nombre => {
+        html += `<option value="${nombre}">${nombre}</option>`;
+      });
+      html += `</select></label>`;
       break;
     case 'tiempo':
       html = `<label>Selecciona rango de tiempo:
@@ -178,74 +189,7 @@ function actualizarObjetivo() {
                 <select name="objetivo" required>
                   <option value="0">0</option>
                   <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </label>`;
-      break;
-  }
-  objetivoContainer.innerHTML = html;
-}
-
-// Inicializar campo al cargar la página
-actualizarObjetivo();
-
-// Cambiar campo si se selecciona otro tipo
-tipoApuesta.addEventListener('change', actualizarObjetivo);
-
-// Manejar envío del formulario
-apuestaForm.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const formData = new FormData(apuestaForm);
-  const usuario = formData.get('usuario');
-  const carrera = formData.get('carrera');
-  const tipo = formData.get('tipo');
-  const objetivo = formData.get('objetivo');
-  let cantidad = parseInt(formData.get('cantidad'));
-
-  if(cantidad > 100) {
-    apuestaResult.textContent = '❌ La apuesta excede 100 babosas y no será válida.';
-    return;
-  }
-
-  const multiplicador = multiplicadores[tipo];
-  const lechuguines = cantidad * multiplicador;
-
-  // Guardar en ranking
-  let existente = ranking.find(r => r.usuario === usuario);
-  if(existente) {
-    existente.lechuguines += lechuguines;
-  } else {
-    ranking.push({usuario, lechuguines});
-  }
-
-  // Ordenar ranking
-  ranking.sort((a,b) => b.lechuguines - a.lechuguines);
-
-  // Mostrar ranking
-  rankingList.innerHTML = '';
-  ranking.forEach((r,i) => {
-    const li = document.createElement('li');
-    li.textContent = `${i+1}. ${r.usuario}: ${r.lechuguines} lechuguines`;
-    rankingList.appendChild(li);
-  });
-
-  // Preparar correo
-  const asunto = encodeURIComponent(`Apuesta de ${usuario}`);
-  const cuerpo = encodeURIComponent(
-    `Usuario: ${usuario}\nCarrera: ${carrera}\nTipo de apuesta: ${tipo}\nObjetivo: ${objetivo}\nCantidad apostada: ${cantidad}\nLechuguines potenciales: ${lechuguines}`
-  );
-
-  const mailtoLink = `mailto:bichosalafuga@gmail.com?subject=${asunto}&body=${cuerpo}`;
-  apuestaResult.innerHTML = `✅ Apuesta válida. Lechuguines potenciales: ${lechuguines}\n\nHaz clic aquí para enviar el correo:\n<a href="${mailtoLink}">Enviar apuesta por correo</a>`;
-});
-</script>
-
-</main>
-</body>
-</html>
+                  <option value="2">2</op
 
 
 
