@@ -127,6 +127,7 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
 <script>
 const tipoApuesta = document.getElementById('tipoApuesta');
 const objetivoContainer = document.getElementById('objetivoContainer');
+const selectCarrera = document.getElementById('selectCarrera');
 const apuestaForm = document.getElementById('apuestaForm');
 const apuestaResult = document.getElementById('apuestaResult');
 
@@ -151,12 +152,13 @@ const corredoresPorCarrera = {
   8: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"]
 };
 
-// Generar campo dinámico según tipo de apuesta
+// Función para generar campo objetivo según tipo de apuesta
 function actualizarObjetivo() {
   const tipo = tipoApuesta.value;
+  const carreraId = parseInt(selectCarrera.value);
   let html = '';
-  const carreraId = parseInt(document.getElementById("selectCarrera").value);
-  switch(tipo) {
+
+  switch(tipo){
     case 'posicion':
       html = `<label>Selecciona posición:
                 <select name="objetivo" required>
@@ -189,7 +191,51 @@ function actualizarObjetivo() {
                 <select name="objetivo" required>
                   <option value="0">0</option>
                   <option value="1">1</option>
-                  <option value="2">2</op
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </label>`;
+      break;
+  }
 
+  objetivoContainer.innerHTML = html;
+}
 
+// Inicializar
+actualizarObjetivo();
 
+// Actualizar al cambiar tipo de apuesta o carrera
+tipoApuesta.addEventListener('change', actualizarObjetivo);
+selectCarrera.addEventListener('change', actualizarObjetivo);
+
+// Enviar formulario
+apuestaForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  const formData = new FormData(apuestaForm);
+  const usuario = formData.get('usuario');
+  const carrera = formData.get('carrera');
+  const tipo = formData.get('tipo');
+  const objetivo = formData.get('objetivo');
+  const cantidad = parseInt(formData.get('cantidad'));
+
+  if(cantidad > 100){
+    apuestaResult.textContent = '❌ La apuesta excede 100 babosas y no será válida.';
+    return;
+  }
+
+  const lechuguines = cantidad * multiplicadores[tipo];
+  const asunto = encodeURIComponent(`Apuesta de ${usuario}`);
+  const cuerpo = encodeURIComponent(
+    `Usuario: ${usuario}\nCarrera: ${carrera}\nTipo de apuesta: ${tipo}\nObjetivo: ${objetivo}\nCantidad apostada: ${cantidad}\nLechuguines potenciales: ${lechuguines}`
+  );
+
+  const mailtoLink = `mailto:bichosalafuga@gmail.com?subject=${asunto}&body=${cuerpo}`;
+  apuestaResult.innerHTML = `✅ Apuesta válida. Lechuguines potenciales: ${lechuguines}\n\nHaz clic aquí para enviar el correo:\n<a href="${mailtoLink}">Enviar apuesta por correo</a>`;
+});
+</script>
+
+</main>
+</body>
+</html>
