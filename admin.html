@@ -2,134 +2,177 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Bichos a la fuga - Admin</title>
+<title>Bichos a la fuga – Admin</title>
+
 <style>
-body { font-family:sans-serif; margin:20px; }
-fieldset { margin-bottom:20px; padding:10px; }
+body { font-family: sans-serif; margin: 0; background:#f8f8f8; }
+header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+main { margin:20px; }
+fieldset { margin-bottom:20px; padding:15px; background:#fff;
+           border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,.1); }
+label { display:block; margin:10px 0; }
+input, select { padding:5px; font-size:16px; }
+button { background:#4CAF50; color:white; border:none;
+         padding:10px 20px; font-size:16px; cursor:pointer;
+         border-radius:5px; }
+button:hover { background:#45a049; }
 pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
-input[type="number"] { width:60px; }
+hr { margin:10px 0; }
+footer { text-align:center; margin:40px 0; }
+footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>🐌 Administrador de Bichos a la fuga</h1>
+  <h1>🐌 Administrador – Bichos a la fuga</h1>
+  <p>Panel oficial de resultados</p>
 </header>
 
 <main>
-<fieldset id="loginAdminFieldset">
-<legend>Login Admin</legend>
-<label>Usuario: <input type="text" id="adminUser"></label>
-<label>Contraseña: <input type="password" id="adminPass"></label>
-<button id="loginAdminBtn">Entrar</button>
-<pre id="loginResult"></pre>
+
+<!-- LOGIN -->
+<fieldset id="loginFieldset">
+  <legend>Acceso administrador</legend>
+  <label>Usuario
+    <input type="text" id="adminUser">
+  </label>
+  <label>Contraseña
+    <input type="password" id="adminPass">
+  </label>
+  <button id="loginBtn">Entrar</button>
+  <pre id="loginResult"></pre>
 </fieldset>
 
+<!-- PANEL ADMIN -->
 <fieldset id="panelAdmin" style="display:none;">
-<legend>Panel Admin</legend>
-<label>Carrera:
-<select id="adminCarreraId">
-<option value="1">Escalada Pegada</option>
-<option value="2">Desliz Extremo</option>
-<option value="3">Reto Baboso</option>
-<option value="4">Turbo Caracol</option>
-<option value="5">Lenta Conquista</option>
-<option value="6">Súper Resbalón</option>
-<option value="7">Meta Babosa</option>
-<option value="8">Final Legendaria</option>
-</select>
-</label>
+  <legend>Resultados de carrera</legend>
 
-<div id="adminCaracolesContainer"></div>
+  <label>Carrera
+    <select id="adminCarreraId">
+      <option value="1">Escalada Pegada</option>
+      <option value="2">Desliz Extremo</option>
+      <option value="3">Reto Baboso</option>
+      <option value="4">Turbo Caracol</option>
+      <option value="5">Lenta Conquista</option>
+      <option value="6">Súper Resbalón</option>
+      <option value="7">Meta Babosa</option>
+      <option value="8">Final Legendaria</option>
+    </select>
+  </label>
 
-<label>Tiempo de llegada predominante:
-<select id="adminTiempo">
-<option value="0-10">0-10</option>
-<option value="10-20">10-20</option>
-<option value="20-30">20-30</option>
-</select>
-</label>
+  <div id="caracolesContainer"></div>
 
-<label>Cuántos llegaron:
-<select id="adminLlegaron">
-<option value="1">1</option><option value="2">2</option>
-<option value="3">3</option><option value="4">4</option>
-<option value="5">5</option>
-</select>
-</label>
+  <label>Tiempo predominante
+    <select id="adminTiempo">
+      <option value="0-10">0-10</option>
+      <option value="10-20">10-20</option>
+      <option value="20-30">20-30</option>
+    </select>
+  </label>
 
-<button id="finalizarCarrera">Finalizar Carrera</button>
-<pre id="adminResult"></pre>
+  <label>Cuántos llegaron
+    <select id="adminLlegaron">
+      <option>1</option><option>2</option><option>3</option>
+      <option>4</option><option>5</option>
+    </select>
+  </label>
+
+  <button id="finalizarCarrera">Finalizar carrera</button>
+  <pre id="adminResult"></pre>
 </fieldset>
+
+</main>
+
+<footer>
+  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
+  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
+  <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
+  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
+</footer>
 
 <script>
-// ------------------- CONFIG -------------------
-const participantes = ["Toreto","Sinhuellas","Tro Gari","Arrastrado","Baboso Flash"];
-let apuestas = [];
-let lechuguines = 0;
+/* ================= CONFIG ================= */
+const API = "https://bichos-backend.onrender.com";
+const participantes = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
 
-// LOGIN ADMIN
-const loginBtn=document.getElementById("loginAdminBtn");
-const loginResult=document.getElementById("loginResult");
-const panelAdmin=document.getElementById("panelAdmin");
+/* ================= LOGIN ================= */
+const loginBtn = document.getElementById("loginBtn");
+const loginResult = document.getElementById("loginResult");
+const panelAdmin = document.getElementById("panelAdmin");
+const loginFieldset = document.getElementById("loginFieldset");
 
-loginBtn.addEventListener("click",()=>{
-const usuario=document.getElementById("adminUser").value;
-const pass=document.getElementById("adminPass").value;
-if(usuario==="admin"&&pass==="1234"){
-  loginResult.textContent="Acceso concedido ✅";
-  panelAdmin.style.display="block";
-  document.getElementById("loginAdminFieldset").style.display="none";
-  generarPanelAdmin();
-}else loginResult.textContent="Usuario o contraseña incorrectos ❌";
+loginBtn.addEventListener("click", ()=>{
+  if(
+    document.getElementById("adminUser").value === "admin" &&
+    document.getElementById("adminPass").value === "1234"
+  ){
+    loginResult.textContent = "Acceso concedido ✅";
+    loginFieldset.style.display = "none";
+    panelAdmin.style.display = "block";
+    generarPanel();
+  } else {
+    loginResult.textContent = "Credenciales incorrectas ❌";
+  }
 });
 
-// PANEL ADMIN
-function generarPanelAdmin(){
-const container=document.getElementById("adminCaracolesContainer");
-container.innerHTML="";
-participantes.forEach((p,i)=>{
-  const field=document.createElement("div");
-  field.innerHTML=`
-  <strong>${p}</strong><br>
-  Posición (1-5): <input type="number" min="1" max="5" value="${i+1}" id="pos_${i}"><br>
-  Primer en moverse: <input type="radio" name="primerMover" value="${p}"><br>
-  Primer en salirse: <input type="radio" name="primerSalir" value="${p}">
-  <hr>
-  `;
-  container.appendChild(field);
-});
-}
-
-// FINALIZAR CARRERA
-document.getElementById("finalizarCarrera").addEventListener("click",()=>{
-  const posiciones=[]; 
-  const primerMover=document.querySelector('input[name="primerMover"]:checked')?.value;
-  const primerSalir=document.querySelector('input[name="primerSalir"]:checked')?.value;
-  const tiempo=document.getElementById("adminTiempo").value;
-  const cuantosLlegan=parseInt(document.getElementById("adminLlegaron").value);
+/* ================= PANEL ================= */
+function generarPanel(){
+  const cont = document.getElementById("caracolesContainer");
+  cont.innerHTML = "";
 
   participantes.forEach((p,i)=>{
-    const posVal=parseInt(document.getElementById(`pos_${i}`).value);
-    posiciones[posVal-1]=p;
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <strong>${p}</strong><br>
+      Posición:
+      <input type="number" min="1" max="5" value="${i+1}" id="pos_${i}">
+      <br>
+      Primer en moverse:
+      <input type="radio" name="primerMover" value="${p}">
+      Primer en salirse:
+      <input type="radio" name="primerSalir" value="${p}">
+      <hr>
+    `;
+    cont.appendChild(div);
+  });
+}
+
+/* ================= ENVIAR RESULTADOS ================= */
+document.getElementById("finalizarCarrera").addEventListener("click", async ()=>{
+  const carrera = parseInt(document.getElementById("adminCarreraId").value);
+
+  const posiciones = [];
+  participantes.forEach((p,i)=>{
+    posiciones[document.getElementById(`pos_${i}`).value-1] = p;
   });
 
-  let resultadosTexto=`Posiciones: ${posiciones.join(", ")}\nPrimer en moverse: ${primerMover}\nPrimer en salirse: ${primerSalir}\nTiempo: ${tiempo}\nCuántos llegaron: ${cuantosLlegan}\n\n`;
+  const resultado = {
+    posicion: posiciones,
+    primer_movimiento: document.querySelector('input[name="primerMover"]:checked')?.value,
+    primer_salida: document.querySelector('input[name="primerSalir"]:checked')?.value,
+    tiempo: document.getElementById("adminTiempo").value,
+    cuantos_llegan: parseInt(document.getElementById("adminLlegaron").value)
+  };
 
-  apuestas.forEach(a=>{
-    let ganancia=a.cantidad;
-    if(a.tipo==="posicion"){ if(a.objetivo.posicion<=3 && posiciones[a.objetivo.posicion-1]===a.objetivo.nombre) ganancia*=2; else ganancia=0; }
-    else if(a.tipo==="primer_movimiento"){ if(a.objetivo===primerMover) ganancia*=3; else ganancia=0; }
-    else if(a.tipo==="primer_salida"){ if(a.objetivo===primerSalir) ganancia*=3; else ganancia=0; }
-    else if(a.tipo==="tiempo"){ if(a.objetivo===tiempo) ganancia*=3; else ganancia=0; }
-    else if(a.tipo==="cuantos_llegan"){ if(a.objetivo===cuantosLlegan) ganancia*=3; else ganancia=0; }
-    lechuguines+=ganancia;
-    resultadosTexto+=`Usuario ${a.usuario} ganó ${ganancia} lechuguines\n`;
-  });
+  try{
+    const res = await fetch(`${API}/admin/resultado`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ carrera, resultado })
+    });
 
-  document.getElementById("adminResult").innerText=resultadosTexto;
-  apuestas=[];
+    const data = await res.json();
+    document.getElementById("adminResult").textContent =
+      JSON.stringify(data,null,2);
+
+  }catch(e){
+    document.getElementById("adminResult").textContent = "Error al enviar resultados";
+  }
 });
 </script>
+
 </body>
 </html>
+
