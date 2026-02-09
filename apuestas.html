@@ -2,127 +2,109 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Bichos a la fuga – Apuestas</title>
-
+<title>🐌 Bichos a la fuga – Apostar</title>
 <style>
 body { font-family:sans-serif; margin:0; background:#f8f8f8; }
 header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+nav { background:#333; display:flex; justify-content:center; }
+nav a { color:white; text-decoration:none; padding:10px 20px; }
+nav a:hover { background:#45a049; border-radius:5px; }
 main { margin:20px; }
-fieldset { margin-bottom:20px; padding:15px; background:#fff;
-           border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,.1); }
-label { display:block; margin:10px 0; }
-select, input { padding:5px; font-size:16px; }
-button { background:#4CAF50; color:white; border:none;
-         padding:10px 20px; font-size:16px;
-         border-radius:5px; cursor:pointer; }
-button:hover { background:#45a049; }
-pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; }
-footer { text-align:center; margin:40px 0; }
-footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
+fieldset { margin-bottom:20px; padding:15px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; border-radius:5px; }
+label { display:block; margin-bottom:10px; }
+select,input { padding:5px; font-size:16px; margin-top:5px; }
+button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
+button:hover { background-color:#45a049; }
+button:disabled { background:#aaa; cursor:not-allowed; }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th,td { border:1px solid #ccc; padding:8px; text-align:center; }
+th { background:#eee; }
+h3 { margin-top:20px; }
+footer { text-align:center; margin:40px 20px; font-size:14px; color:#555; }
+footer a { margin:0 8px; color:#4CAF50; text-decoration:none; }
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>🐌 Bichos a la fuga</h1>
-  <p>Haz tu apuesta</p>
+  <h1>🐌 Apostar – Bichos a la fuga</h1>
+  <p>Haz tus apuestas ficticias en el campeonato más lento del mundo</p>
 </header>
+
+<nav>
+  <a href="index.html">Inicio</a>
+  <a href="apuestas.html">Apuestas</a>
+  <a href="corredores.html">Corredores</a>
+  <a href="carreras.html">Carreras</a>
+</nav>
 
 <main>
 
 <fieldset>
-  <legend>Tu apuesta</legend>
+  <legend>Registrar apuesta</legend>
+  <form id="apuestaForm">
+    <label>Nombre de usuario:
+      <input type="text" name="usuario" placeholder="Escribe tu nombre" required>
+    </label>
 
-  <label>Nombre del jugador
-    <input type="text" id="nombreJugador">
-  </label>
+    <label>Carrera:
+      <select name="carrera" id="selectCarrera" required>
+        <option value="1">Escalada Pegada</option>
+        <option value="2">Desliz Extremo</option>
+        <option value="3">Reto Baboso</option>
+        <option value="4">Turbo Caracol</option>
+        <option value="5">Lenta Conquista</option>
+        <option value="6">Súper Resbalón</option>
+        <option value="7">Meta Babosa</option>
+        <option value="8">Final Legendaria</option>
+      </select>
+    </label>
 
-  <label>Carrera
-    <select id="carreraId">
-      <option value="1">Escalada Pegada</option>
-      <option value="2">Desliz Extremo</option>
-      <option value="3">Reto Baboso</option>
-      <option value="4">Turbo Caracol</option>
-      <option value="5">Lenta Conquista</option>
-      <option value="6">Súper Resbalón</option>
-      <option value="7">Meta Babosa</option>
-      <option value="8">Final Legendaria</option>
-    </select>
-  </label>
+    <label>Tipo de apuesta:
+      <select name="tipo" id="tipoApuesta" required>
+        <option value="posicion">Posición final</option>
+        <option value="primer_movimiento">Primer en moverse</option>
+        <option value="primer_salida">Primer en salirse</option>
+        <option value="tiempo">Tiempo de llegada</option>
+        <option value="cuantos_llegan">Cuántos llegan</option>
+      </select>
+    </label>
 
-  <label>Ganador
-    <select id="ganador">
-      <option>Toreto</option>
-      <option>Sinhuellas</option>
-      <option>Gari</option>
-      <option>Arrastrado</option>
-      <option>Baboso Flash</option>
-    </select>
-  </label>
+    <div id="objetivoContainer"></div>
 
-  <label>Segundo
-    <select id="segundo">
-      <option>Toreto</option>
-      <option>Sinhuellas</option>
-      <option>Gari</option>
-      <option>Arrastrado</option>
-      <option>Baboso Flash</option>
-    </select>
-  </label>
-
-  <label>Tercero
-    <select id="tercero">
-      <option>Toreto</option>
-      <option>Sinhuellas</option>
-      <option>Gari</option>
-      <option>Arrastrado</option>
-      <option>Baboso Flash</option>
-    </select>
-  </label>
-
-  <label>Primer caracol en moverse
-    <select id="primerMovimiento">
-      <option>Toreto</option>
-      <option>Sinhuellas</option>
-      <option>Gari</option>
-      <option>Arrastrado</option>
-      <option>Baboso Flash</option>
-    </select>
-  </label>
-
-  <label>Primer caracol en salirse
-    <select id="primerSalida">
-      <option>Toreto</option>
-      <option>Sinhuellas</option>
-      <option>Gari</option>
-      <option>Arrastrado</option>
-      <option>Baboso Flash</option>
-    </select>
-  </label>
-
-  <label>Tiempo predominante
-    <select id="tiempo">
-      <option value="0-10">0-10</option>
-      <option value="10-20">10-20</option>
-      <option value="20-30">20-30</option>
-    </select>
-  </label>
-
-  <label>¿Cuántos llegaron?
-    <select id="llegaron">
-      <option>1</option><option>2</option><option>3</option>
-      <option>4</option><option>5</option>
-    </select>
-  </label>
-
-  <button id="enviarApuesta">Enviar apuesta</button>
-  <pre id="resultado"></pre>
+    <label>Cantidad de babosas: <input type="number" name="cantidad" min="1" required></label>
+    <button type="submit">Apostar</button>
+  </form>
+  <pre id="apuestaResult"></pre>
 </fieldset>
 
-</main>
+<fieldset>
+  <legend>Apuestas activas</legend>
+  <table id="apuestasTable">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Carrera</th>
+        <th>Tipo</th>
+        <th>Objetivo</th>
+        <th>Babosas</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Ranking actual</legend>
+  <pre id="ranking">Cargando...</pre>
+  <button id="refreshRanking">Actualizar ranking</button>
+</fieldset>
 
 <footer>
+  📱 Síguenos en:
   <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
   <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
   <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
@@ -130,49 +112,97 @@ footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
 </footer>
 
 <script>
-/* ================= CONFIG ================= */
-const API = "https://bichos-backend.onrender.com";
+const backendURL = "https://bichos-backend.onrender.com";
+const tipoApuesta = document.getElementById("tipoApuesta");
+const objetivoContainer = document.getElementById("objetivoContainer");
+const selectCarrera = document.getElementById("selectCarrera");
+const datosCarreraPre = document.getElementById("apuestaResult");
+const carrerasRealizadas = []; // se actualizará con backend si quieres
 
-/* ================= ENVIAR APUESTA ================= */
-document.getElementById("enviarApuesta").addEventListener("click", async ()=>{
+const participantesPorCarrera = {
+  1:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"],
+  2:["Sinhuellas","Toreto","Gari","Arrastrado","Baboso Flash"],
+  3:["Gari","Sinhuellas","Toreto","Arrastrado","Baboso Flash"],
+  4:["Toreto","Gari","Sinhuellas","Arrastrado","Baboso Flash"],
+  5:["Sinhuellas","Gari","Toreto","Arrastrado","Baboso Flash"],
+  6:["Gari","Toreto","Sinhuellas","Arrastrado","Baboso Flash"],
+  7:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"],
+  8:["Baboso Flash","Toreto","Sinhuellas","Gari","Arrastrado"]
+};
 
-  const nombre = document.getElementById("nombreJugador").value.trim();
-  if(!nombre){
-    document.getElementById("resultado").textContent =
-      "❌ Debes introducir tu nombre";
-    return;
+function actualizarObjetivoInput(){
+  const tipo = tipoApuesta.value;
+  const carrera = selectCarrera.value;
+  const participantes = participantesPorCarrera[carrera];
+  objetivoContainer.innerHTML = "";
+  if(tipo==="posicion"){
+    const label = document.createElement("label");
+    label.textContent = "Selecciona caracol y posición:";
+    const selC = document.createElement("select"); selC.name="caracol";
+    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; selC.appendChild(opt); });
+    const selP = document.createElement("select"); selP.name="posicion";
+    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; selP.appendChild(opt); });
+    label.appendChild(selC); label.appendChild(selP); objetivoContainer.appendChild(label);
+  } else if(tipo==="primer_movimiento" || tipo==="primer_salida"){
+    const label = document.createElement("label"); label.textContent="Selecciona caracol:";
+    const sel = document.createElement("select"); sel.name="caracol";
+    participantes.forEach(p=>{ const opt=document.createElement("option"); opt.value=p; opt.textContent=p; sel.appendChild(opt); });
+    label.appendChild(sel); objetivoContainer.appendChild(label);
+  } else if(tipo==="tiempo"){
+    const label = document.createElement("label"); label.textContent="Selecciona rango de tiempo:";
+    const sel = document.createElement("select"); sel.name="tiempo";
+    ["0-10","10-20","20-30"].forEach(r=>{ const opt=document.createElement("option"); opt.value=r; opt.textContent=r; sel.appendChild(opt); });
+    label.appendChild(sel); objetivoContainer.appendChild(label);
+  } else if(tipo==="cuantos_llegan"){
+    const label = document.createElement("label"); label.textContent="Selecciona cuántos llegan:";
+    const sel = document.createElement("select"); sel.name="cantidadLlegan";
+    [1,2,3,4,5].forEach(n=>{ const opt=document.createElement("option"); opt.value=n; opt.textContent=n; sel.appendChild(opt); });
+    label.appendChild(sel); objetivoContainer.appendChild(label);
   }
+}
 
-  const apuesta = {
-    nombre,
-    carrera: parseInt(document.getElementById("carreraId").value),
-    ganador: document.getElementById("ganador").value,
-    segundo: document.getElementById("segundo").value,
-    tercero: document.getElementById("tercero").value,
-    primer_movimiento: document.getElementById("primerMovimiento").value,
-    primer_salida: document.getElementById("primerSalida").value,
-    tiempo: document.getElementById("tiempo").value,
-    cuantos_llegan: parseInt(document.getElementById("llegaron").value)
-  };
+tipoApuesta.addEventListener("change", actualizarObjetivoInput);
+selectCarrera.addEventListener("change", actualizarObjetivoInput);
+actualizarObjetivoInput();
 
+// Funciones para cargar apuestas y ranking
+async function cargarApuestas(){
   try{
-    const res = await fetch(`${API}/apuesta`,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(apuesta)
-    });
-
+    const res = await fetch(`${backendURL}/apuestas`);
     const data = await res.json();
-    document.getElementById("resultado").textContent =
-      JSON.stringify(data,null,2);
+    const tbody = document.querySelector("#apuestasTable tbody");
+    tbody.innerHTML="";
+    data.forEach((a,i)=>{
+      const disabled = carrerasRealizadas.includes(a.carrera)?'disabled':'';
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${a.usuario}</td><td>${a.carrera}</td><td>${a.tipo}</td>
+      <td>${JSON.stringify(a.objetivo)}</td><td>${a.cantidad}</td>
+      <td>
+        <button onclick="modificarApuesta(${i})" ${disabled}>Editar</button>
+        <button onclick="borrarApuesta(${i})" ${disabled}>Borrar</button>
+      </td>`;
+      tbody.appendChild(tr);
+    });
+  }catch(e){ console.error(e); }
+}
 
-  }catch(e){
-    document.getElementById("resultado").textContent =
-      "❌ Error enviando la apuesta";
-  }
-});
+async function actualizarRanking(){
+  try{
+    const res = await fetch(`${backendURL}/ranking`);
+    const data = await res.json();
+    document.getElementById("ranking").innerText = data.map((u,i)=>`Puesto ${i+1}: ${u.nombre} - ${u.lech} lechuguines`).join("\n");
+  }catch(e){ console.error(e); document.getElementById("ranking").innerText="Error al cargar ranking"; }
+}
+
+document.getElementById("refreshRanking").addEventListener("click", actualizarRanking);
+
+// Inicializar
+cargarApuestas();
+actualizarRanking();
 </script>
 
+</main>
 </body>
 </html>
+
 
