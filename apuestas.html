@@ -7,7 +7,7 @@
 body { font-family:sans-serif; margin:20px; background:#f8f8f8; }
 fieldset { margin-bottom:20px; padding:15px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
 label { display:block; margin-bottom:10px; }
-select,input { padding:5px; font-size:16px; margin-top:5px; }
+input, select { padding:5px; font-size:16px; margin-top:5px; width:100%; box-sizing:border-box; }
 button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
 button:hover { background-color:#45a049; }
 pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; border-radius:5px; margin-top:10px; }
@@ -16,6 +16,7 @@ nav a { color:white; text-decoration:none; padding:10px 20px; }
 nav a:hover { background-color:#4CAF50; border-radius:5px; }
 .social-links { margin-top: 20px; text-align:center; }
 .social-links a { margin-right: 10px; text-decoration:none; color:#4CAF50; font-weight:bold; }
+#ranking { margin-top:20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
 </style>
 </head>
 <body>
@@ -34,6 +35,36 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
 
 <main>
 
+<!-- Apartado de reglas -->
+<fieldset>
+  <legend>Cómo apostar en Bichos a la fuga</legend>
+  <p>Antes de realizar tu apuesta, ten en cuenta las siguientes reglas:</p>
+  <ul>
+    <li>Cada carrera tiene <strong>5 corredores</strong>.</li>
+    <li>Tipos de apuestas:
+      <ul>
+        <li><strong>Posición final:</strong> Primer, segundo o tercer lugar. Multiplica tus babosas por 5.</li>
+        <li><strong>Primer en moverse:</strong> Qué corredor se mueve primero. Multiplica tus babosas por 4.</li>
+        <li><strong>Primer en salirse:</strong> Qué corredor se sale primero. Multiplica tus babosas por 3.</li>
+        <li><strong>Tiempo de llegada:</strong> 0-10, 10-20 o 20-30 minutos. Multiplica tus babosas por 3.</li>
+        <li><strong>Número de corredores que se salen:</strong> Cuántos se salen. Multiplica tus babosas por 2.</li>
+      </ul>
+    </li>
+    <li><strong>Límite de apuesta:</strong> Máximo <strong>100 babosas por carrera</strong>. Si apuestas más, la apuesta será inválida.</li>
+    <li>Al ganar, tus babosas se transforman en <strong>lechuguines</strong> según el multiplicador.</li>
+    <li>Para apostar:
+      <ol>
+        <li>Rellena tus datos en el formulario.</li>
+        <li>Selecciona carrera y tipo de apuesta.</li>
+        <li>Indica cantidad de babosas (máximo 100).</li>
+        <li>Haz clic en <em>Enviar apuesta por correo</em>.</li>
+      </ol>
+    </li>
+    <li>Debajo se mostrará el <strong>ranking actualizado por lechuguines</strong>.</li>
+  </ul>
+</fieldset>
+
+<!-- Formulario de apuestas -->
 <fieldset>
   <legend>Registrar apuesta</legend>
   <form id="apuestaForm">
@@ -60,20 +91,26 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
         <option value="primer_movimiento">Primer en moverse</option>
         <option value="primer_salida">Primer en salirse</option>
         <option value="tiempo">Tiempo de llegada</option>
-        <option value="cuantos_llegan">Cuántos llegan</option>
+        <option value="cuantos_llegan">Número de corredores que se salen</option>
       </select>
     </label>
 
     <div id="objetivoContainer"></div>
 
     <label>Cantidad de babosas:
-      <input type="number" name="cantidad" min="1" required>
+      <input type="number" name="cantidad" id="cantidadBabosas" min="1" max="100" required>
     </label>
 
     <button type="submit">Enviar apuesta por correo</button>
   </form>
   <pre id="apuestaResult"></pre>
 </fieldset>
+
+<!-- Ranking -->
+<div id="ranking">
+  <h3>🏆 Ranking actualizado por lechuguines</h3>
+  <ul id="rankingList"></ul>
+</div>
 
 <div class="social-links">
   <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a>
@@ -82,7 +119,129 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
   <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
 </div>
 
-<script src="index.js"></script>
+<script>
+const tipoApuesta = document.getElementById('tipoApuesta');
+const objetivoContainer = document.getElementById('objetivoContainer');
+const apuestaForm = document.getElementById('apuestaForm');
+const apuestaResult = document.getElementById('apuestaResult');
+const rankingList = document.getElementById('rankingList');
+
+// Multiplicadores
+const multiplicadores = {
+  posicion: 5,
+  primer_movimiento: 4,
+  primer_salida: 3,
+  tiempo: 3,
+  cuantos_llegan: 2
+};
+
+// Array para ranking
+let ranking = [];
+
+// Generar campo dinámico según tipo de apuesta
+function actualizarObjetivo() {
+  const tipo = tipoApuesta.value;
+  let html = '';
+  switch(tipo) {
+    case 'posicion':
+      html = `<label>Selecciona posición:
+                <select name="objetivo" required>
+                  <option value="1">1º</option>
+                  <option value="2">2º</option>
+                  <option value="3">3º</option>
+                </select>
+              </label>`;
+      break;
+    case 'primer_movimiento':
+    case 'primer_salida':
+      html = `<label>Selecciona corredor:
+                <select name="objetivo" required>
+                  <option value="1">Corredor 1</option>
+                  <option value="2">Corredor 2</option>
+                  <option value="3">Corredor 3</option>
+                  <option value="4">Corredor 4</option>
+                  <option value="5">Corredor 5</option>
+                </select>
+              </label>`;
+      break;
+    case 'tiempo':
+      html = `<label>Selecciona rango de tiempo:
+                <select name="objetivo" required>
+                  <option value="0-10">0-10 min</option>
+                  <option value="10-20">10-20 min</option>
+                  <option value="20-30">20-30 min</option>
+                </select>
+              </label>`;
+      break;
+    case 'cuantos_llegan':
+      html = `<label>Número de corredores que se salen:
+                <select name="objetivo" required>
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </label>`;
+      break;
+  }
+  objetivoContainer.innerHTML = html;
+}
+
+// Inicializar campo al cargar la página
+actualizarObjetivo();
+
+// Cambiar campo si se selecciona otro tipo
+tipoApuesta.addEventListener('change', actualizarObjetivo);
+
+// Manejar envío del formulario
+apuestaForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(apuestaForm);
+  const usuario = formData.get('usuario');
+  const carrera = formData.get('carrera');
+  const tipo = formData.get('tipo');
+  const objetivo = formData.get('objetivo');
+  let cantidad = parseInt(formData.get('cantidad'));
+
+  if(cantidad > 100) {
+    apuestaResult.textContent = '❌ La apuesta excede 100 babosas y no será válida.';
+    return;
+  }
+
+  const multiplicador = multiplicadores[tipo];
+  const lechuguines = cantidad * multiplicador;
+
+  // Guardar en ranking
+  let existente = ranking.find(r => r.usuario === usuario);
+  if(existente) {
+    existente.lechuguines += lechuguines;
+  } else {
+    ranking.push({usuario, lechuguines});
+  }
+
+  // Ordenar ranking
+  ranking.sort((a,b) => b.lechuguines - a.lechuguines);
+
+  // Mostrar ranking
+  rankingList.innerHTML = '';
+  ranking.forEach((r,i) => {
+    const li = document.createElement('li');
+    li.textContent = `${i+1}. ${r.usuario}: ${r.lechuguines} lechuguines`;
+    rankingList.appendChild(li);
+  });
+
+  // Preparar correo
+  const asunto = encodeURIComponent(`Apuesta de ${usuario}`);
+  const cuerpo = encodeURIComponent(
+    `Usuario: ${usuario}\nCarrera: ${carrera}\nTipo de apuesta: ${tipo}\nObjetivo: ${objetivo}\nCantidad apostada: ${cantidad}\nLechuguines potenciales: ${lechuguines}`
+  );
+
+  const mailtoLink = `mailto:bichosalafuga@gmail.com?subject=${asunto}&body=${cuerpo}`;
+  apuestaResult.innerHTML = `✅ Apuesta válida. Lechuguines potenciales: ${lechuguines}\n\nHaz clic aquí para enviar el correo:\n<a href="${mailtoLink}">Enviar apuesta por correo</a>`;
+});
+</script>
 
 </main>
 </body>
