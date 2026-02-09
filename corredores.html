@@ -2,22 +2,39 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Corredores Babosos</title>
+<title>🐌 Bichos a la fuga – Corredores</title>
+
 <style>
-body { font-family: sans-serif; margin: 20px; background: #f9f9f9; }
-h1 { text-align: center; color: #4CAF50; margin-bottom: 30px; }
-.corredor { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.nombre { font-weight: bold; font-size: 1.5em; margin-bottom: 5px; }
-.descripcion { margin: 5px 0; font-style: italic; color: #555; }
-.habilidades, .debilidades { margin: 5px 0; }
-.video-container { margin: 10px 0; }
-.video-container iframe { width: 100%; height: 315px; border-radius: 8px; }
-nav { background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px; }
+body { font-family:sans-serif; margin:0; background:#f8f8f8; }
+header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+nav { background:#333; display:flex; justify-content:center; }
 nav a { color:white; text-decoration:none; padding:10px 20px; }
-nav a:hover { background-color:#4CAF50; }
+nav a:hover { background:#45a049; border-radius:5px; }
+main { margin:20px; }
+.corredor {
+  background:white;
+  border-radius:8px;
+  padding:15px;
+  margin-bottom:20px;
+  box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+.corredor h3 { margin-top:0; color:#4CAF50; }
+.descripcion { font-style:italic; color:#555; }
+.stats { margin-top:10px; font-size:14px; }
+.video-container { margin-top:15px; }
+.video-container iframe { width:100%; height:250px; border-radius:8px; }
+footer { text-align:center; margin:40px 20px; font-size:14px; color:#555; }
+footer a { margin:0 8px; color:#4CAF50; text-decoration:none; }
+.footer-links { margin-top:20px; }
 </style>
 </head>
+
 <body>
+
+<header>
+  <h1>🐌 Corredores – Bichos a la fuga</h1>
+  <p>Conoce a los protagonistas del barro</p>
+</header>
 
 <nav>
   <a href="index.html">Inicio</a>
@@ -26,65 +43,77 @@ nav a:hover { background-color:#4CAF50; }
   <a href="carreras.html">Carreras</a>
 </nav>
 
-<h1>🐌 Corredores Babosos</h1>
-<div id="corredoresContainer"></div>
+<main id="corredoresContainer">Cargando corredores...</main>
+
+<footer>
+  <div class="footer-links">
+    📱 Síguenos en:
+    <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
+    <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
+    <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
+    <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
+  </div>
+  🐌 Bichos a la fuga – El campeonato más lento del mundo
+</footer>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
+  // Datos fijos de corredores
   const corredores = [
     {
       nombre: "Toreto",
-      descripcion: "Rápido y baboso",
+      descripcion: "Sale lento, pero cuando arranca no hay quien lo pare.",
       habilidades: ["Arranque veloz", "Resistencia alta"],
       debilidades: ["Poca maniobrabilidad en curvas"],
-      videoCorredor: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+      video: "https://www.youtube.com/embed/dQw4w9WgXcQ"
     },
     {
       nombre: "Sinhuellas",
-      descripcion: "No deja rastro",
+      descripcion: "No deja rastro.",
       habilidades: ["Sigiloso", "Evitación de obstáculos"],
       debilidades: ["Velocidad media"],
-      videoCorredor: "https://www.youtube.com/embed/5qap5aO4i9A"
+      video: "https://www.youtube.com/embed/5qap5aO4i9A"
     },
     {
       nombre: "Gari",
-      descripcion: "Ojo loco",
+      descripcion: "Ojo loco.",
       habilidades: ["Saltos impredecibles", "Acelera sorpresivamente"],
       debilidades: ["Inconstante", "Se distrae fácil"],
-      videoCorredor: "https://www.youtube.com/embed/3JZ_D3ELwOQ"
+      video: "https://www.youtube.com/embed/3JZ_D3ELwOQ"
     },
     {
       nombre: "Arrastrado",
-      descripcion: "Lento pero constante",
+      descripcion: "Lento pero constante.",
       habilidades: ["Constancia", "No se cansa fácilmente"],
       debilidades: ["Muy lento al inicio"],
-      videoCorredor: "https://www.youtube.com/embed/V-_O7nl0Ii0"
+      video: "https://www.youtube.com/embed/V-_O7nl0Ii0"
     },
     {
       nombre: "Baboso Flash",
-      descripcion: "Rápido y resbaladizo",
+      descripcion: "Rápido y resbaladizo.",
       habilidades: ["Gran velocidad punta", "Agilidad extrema"],
       debilidades: ["Se resbala en curvas húmedas"],
-      videoCorredor: "https://www.youtube.com/embed/fLexgOxsZu0"
+      video: "https://www.youtube.com/embed/fLexgOxsZu0"
     }
   ];
 
   const container = document.getElementById("corredoresContainer");
-  container.innerHTML = "";
+  container.innerHTML = ""; // limpiar texto inicial
 
   corredores.forEach(c => {
     const div = document.createElement("div");
     div.className = "corredor";
 
     div.innerHTML = `
-      <div class="nombre">${c.nombre}</div>
-      <div class="descripcion">${c.descripcion}</div>
-      <div class="habilidades"><strong>Habilidades:</strong> ${c.habilidades.join(", ")}</div>
-      <div class="debilidades"><strong>Debilidades:</strong> ${c.debilidades.join(", ")}</div>
+      <h3>${c.nombre}</h3>
+      <p class="descripcion">${c.descripcion}</p>
+      <div class="stats">
+        <strong>Habilidades:</strong> ${c.habilidades.join(", ")}<br>
+        <strong>Debilidades:</strong> ${c.debilidades.join(", ")}
+      </div>
       <div class="video-container">
-        <strong>Video del corredor:</strong>
-        <iframe src="${c.videoCorredor}" frameborder="0" allowfullscreen></iframe>
+        <iframe src="${c.video}" frameborder="0" allowfullscreen></iframe>
       </div>
     `;
 
