@@ -50,3 +50,31 @@ button:hover {
 .ranking-item {
   font-size: 18px;
 }
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Colores por red social */
+.social-btn.instagram { background: #E1306C; }
+.social-btn.tiktok { background: #010101; }
+.social-btn.youtube { background: #FF0000; }
+
+.social-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
