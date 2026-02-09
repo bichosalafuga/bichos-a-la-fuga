@@ -23,8 +23,6 @@ h2 { margin-top: 30px; }
 .social-links a:hover { color: #388E3C; }
 .video-title { font-weight: bold; margin-bottom: 5px; }
 .video-desc { font-style: italic; margin-bottom: 10px; color: #555; }
-.ranking-animated p { margin: 5px 0; font-weight: bold; font-size: 1.1em; transition: transform 0.5s, color 0.5s; }
-.ranking-animated p:hover { transform: scale(1.05); color: #388E3C; }
 </style>
 </head>
 <body>
@@ -42,7 +40,20 @@ h2 { margin-top: 30px; }
   <a href="carreras.html">Carreras</a>
 </nav>
 
+<!-- VIDEOS DESPUÉS DEL MENÚ -->
 <main>
+<div class="video-container">
+  <div class="video-title">📌 Video explicativo principal</div>
+  <div class="video-desc">Vistazo al campeonato de babosas, cómo apostar y reglas básicas.</div>
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div class="video-container">
+  <div class="video-title">🎥 Contenido extra</div>
+  <div class="video-desc">Entrevista al Safety Car, mejores escapadas, entrenamientos y curiosidades del campeonato.</div>
+  <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" title="Video extra" frameborder="0" allowfullscreen></iframe>
+</div>
+
 <h2>🎯 ¿Qué es Bichos a la fuga?</h2>
 <p>Bichos a la fuga es un juego privado con fines lúdicos y humorísticos basado en carreras de animales grabadas y emitidas en directo a través de YouTube.</p>
 <ul>
@@ -70,20 +81,6 @@ h2 { margin-top: 30px; }
   <li>❌ No es un casino ni casa de apuestas</li>
 </ul>
 
-<h2>📺 Streaming y chat</h2>
-<p>Las carreras se retransmiten a través de YouTube Live. El chat en directo se realiza exclusivamente en YouTube. La web solo incrusta el vídeo y el chat oficial.</p>
-
-<h2>🐌 Temporadas y carreras</h2>
-<p>El proyecto se organiza en temporadas. Cada carrera incluye:</p>
-<ul>
-  <li>Vídeo explicativo</li>
-  <li>Presentación de participantes</li>
-  <li>Contenido extra humorístico</li>
-  <li>Carrera en directo</li>
-  <li>Resumen post-carrera</li>
-</ul>
-<p>Al final de la temporada, el usuario con más lechuguines lidera el ranking.</p>
-
 <h2>🔐 Acceso</h2>
 <p>Acceso privado, solo por invitación. No indexado para uso público masivo.</p>
 
@@ -101,36 +98,10 @@ h2 { margin-top: 30px; }
 <h2>🐌 Nota final</h2>
 <p>Si has llegado hasta aquí: relájate, disfruta del barro y que gane el caracol más decidido.</p>
 
-<!-- Video explicativo -->
-<div class="video-container">
-  <div class="video-title">📌 Video explicativo principal</div>
-  <div class="video-desc">Vistazo al campeonato de babosas, cómo apostar y reglas básicas.</div>
-  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo" frameborder="0" allowfullscreen></iframe>
-</div>
-
-<div class="video-container">
-  <div class="video-title">🎥 Contenido extra</div>
-  <div class="video-desc">Entrevista al Safety Car, mejores escapadas, entrenamientos y curiosidades del campeonato.</div>
-  <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" title="Video extra" frameborder="0" allowfullscreen></iframe>
-</div>
-
 <!-- Botón de apuestas -->
 <div class="button-container">
   <button onclick="window.location.href='apuestas.html'">🎯 Hacer Apuestas</button>
 </div>
-
-<!-- Ranking animado -->
-<fieldset>
-  <legend>Ranking actual 🥬</legend>
-  <div id="ranking" class="ranking-animated">Cargando ranking...</div>
-  <button id="refreshRanking">Actualizar ranking</button>
-</fieldset>
-
-<!-- Últimas carreras -->
-<fieldset>
-  <legend>Últimas carreras 🐌</legend>
-  <div id="ultimasCarreras">Cargando carreras...</div>
-</fieldset>
 
 <!-- Redes sociales -->
 <div class="social-links">
@@ -140,63 +111,7 @@ h2 { margin-top: 30px; }
   <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">▶️ YouTube Canal</a>
 </div>
 
-<script>
-// URL del backend
-const backendURL = "https://bichos-backend.onrender.com";
-
-// Función para cargar ranking
-async function cargarRanking() {
-    try {
-        const res = await fetch(`${backendURL}/ranking`);
-        const data = await res.json();
-        const container = document.getElementById("ranking");
-        container.innerHTML = "";
-        data.forEach((u,i)=>{
-            const p = document.createElement("p");
-            p.textContent = `#${i+1} ${u.nombre} - ${u.lech} lechuguines`;
-            container.appendChild(p);
-        });
-    } catch(e) {
-        console.error(e);
-        document.getElementById("ranking").textContent = "Error cargando ranking";
-    }
-}
-
-// Función para cargar últimas carreras
-async function cargarUltimasCarreras() {
-    try {
-        const res = await fetch(`${backendURL}/carreras`);
-        const carreras = await res.json();
-        const container = document.getElementById("ultimasCarreras");
-        container.innerHTML = "";
-        if(carreras.length===0){
-            container.textContent = "No hay carreras disponibles";
-            return;
-        }
-        carreras.forEach(c=>{
-            const div = document.createElement("div");
-            div.style.marginBottom = "15px";
-            div.innerHTML = `
-                <h3>${c.nombre}</h3>
-                <p>Ganador: ${c.ganador || "Pendiente"}</p>
-                <p>Participantes: ${c.participantes.join(", ")}</p>
-            `;
-            container.appendChild(div);
-        });
-    } catch(e) {
-        console.error(e);
-        document.getElementById("ultimasCarreras").textContent = "Error cargando las carreras";
-    }
-}
-
-// Inicializar
-document.addEventListener("DOMContentLoaded", ()=>{
-    cargarRanking();
-    cargarUltimasCarreras();
-    document.getElementById("refreshRanking").addEventListener("click", cargarRanking);
-});
-</script>
-
 </main>
 </body>
 </html>
+
