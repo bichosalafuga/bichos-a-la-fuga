@@ -2,88 +2,95 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Bichos a la fuga – Corredores</title>
-
+<title>Corredores Babosos</title>
 <style>
-body { font-family:sans-serif; margin:0; background:#f8f8f8; }
-header { background:#4CAF50; color:white; padding:20px; text-align:center; }
-main {
-  margin:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-}
-.corredor {
-  background:#fff;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 2px 5px rgba(0,0,0,.1);
-  text-align:center;
-}
-.corredor h3 { margin-top:0; }
-.stats { font-size:14px; margin-top:10px; color:#333; }
-footer { text-align:center; margin:40px 0; }
-footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
+body { font-family: sans-serif; margin: 20px; background: #f9f9f9; }
+h1 { text-align: center; color: #4CAF50; margin-bottom: 30px; }
+.corredor { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.nombre { font-weight: bold; font-size: 1.5em; margin-bottom: 5px; }
+.descripcion { margin: 5px 0; font-style: italic; color: #555; }
+.habilidades, .debilidades { margin: 5px 0; }
+.video-container { margin: 10px 0; }
+.video-container iframe { width: 100%; height: 315px; border-radius: 8px; }
+nav { background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px; }
+nav a { color:white; text-decoration:none; padding:10px 20px; }
+nav a:hover { background-color:#4CAF50; }
 </style>
 </head>
-
 <body>
 
-<header>
-  <h1>🐌 Corredores oficiales</h1>
-  <p>Los protagonistas del barro</p>
-</header>
+<nav>
+  <a href="index.html">Inicio</a>
+  <a href="apuestas.html">Apuestas</a>
+  <a href="corredores.html">Corredores</a>
+  <a href="carreras.html">Carreras</a>
+</nav>
 
-<main id="listaCorredores"></main>
-
-<footer>
-  <a href="index.html">Inicio</a> ·
-  <a href="carreras.html">Carreras</a> ·
-  <a href="apuestas.html">Apostar</a>
-</footer>
+<h1>🐌 Corredores Babosos</h1>
+<div id="corredoresContainer"></div>
 
 <script>
-/* ================= CORREDORES FIJOS ================= */
-const corredores = [
-  {
-    nombre: "Toreto",
-    descripcion: "Sale lento, pero cuando arranca no hay quien lo pare."
-  },
-  {
-    nombre: "Sinhuellas",
-    descripcion: "Sigiloso, impredecible y amante del carril interior."
-  },
-  {
-    nombre: "Gari",
-    descripcion: "Constante, trabajador y siempre acaba llegando."
-  },
-  {
-    nombre: "Arrastrado",
-    descripcion: "Especialista en remontadas imposibles."
-  },
-  {
-    nombre: "Baboso Flash",
-    descripcion: "Rápido… para ser un caracol."
-  }
-];
+document.addEventListener("DOMContentLoaded", () => {
 
-/* ================= PINTAR ================= */
-const cont = document.getElementById("listaCorredores");
+  const corredores = [
+    {
+      nombre: "Toreto",
+      descripcion: "Rápido y baboso",
+      habilidades: ["Arranque veloz", "Resistencia alta"],
+      debilidades: ["Poca maniobrabilidad en curvas"],
+      videoCorredor: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      nombre: "Sinhuellas",
+      descripcion: "No deja rastro",
+      habilidades: ["Sigiloso", "Evitación de obstáculos"],
+      debilidades: ["Velocidad media"],
+      videoCorredor: "https://www.youtube.com/embed/5qap5aO4i9A"
+    },
+    {
+      nombre: "Gari",
+      descripcion: "Ojo loco",
+      habilidades: ["Saltos impredecibles", "Acelera sorpresivamente"],
+      debilidades: ["Inconstante", "Se distrae fácil"],
+      videoCorredor: "https://www.youtube.com/embed/3JZ_D3ELwOQ"
+    },
+    {
+      nombre: "Arrastrado",
+      descripcion: "Lento pero constante",
+      habilidades: ["Constancia", "No se cansa fácilmente"],
+      debilidades: ["Muy lento al inicio"],
+      videoCorredor: "https://www.youtube.com/embed/V-_O7nl0Ii0"
+    },
+    {
+      nombre: "Baboso Flash",
+      descripcion: "Rápido y resbaladizo",
+      habilidades: ["Gran velocidad punta", "Agilidad extrema"],
+      debilidades: ["Se resbala en curvas húmedas"],
+      videoCorredor: "https://www.youtube.com/embed/fLexgOxsZu0"
+    }
+  ];
 
-corredores.forEach(c => {
-  const div = document.createElement("div");
-  div.className = "corredor";
+  const container = document.getElementById("corredoresContainer");
+  container.innerHTML = "";
 
-  div.innerHTML = `
-    <h3>${c.nombre}</h3>
-    <p>${c.descripcion}</p>
-    <div class="stats">
-      <p>🏁 Participante oficial</p>
-      <p>🐌 Nivel: impredecible</p>
-    </div>
-  `;
+  corredores.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "corredor";
 
-  cont.appendChild(div);
+    div.innerHTML = `
+      <div class="nombre">${c.nombre}</div>
+      <div class="descripcion">${c.descripcion}</div>
+      <div class="habilidades"><strong>Habilidades:</strong> ${c.habilidades.join(", ")}</div>
+      <div class="debilidades"><strong>Debilidades:</strong> ${c.debilidades.join(", ")}</div>
+      <div class="video-container">
+        <strong>Video del corredor:</strong>
+        <iframe src="${c.videoCorredor}" frameborder="0" allowfullscreen></iframe>
+      </div>
+    `;
+
+    container.appendChild(div);
+  });
+
 });
 </script>
 
