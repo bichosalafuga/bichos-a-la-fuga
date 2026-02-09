@@ -7,99 +7,124 @@
 <style>
 body { font-family:sans-serif; margin:0; background:#f8f8f8; }
 header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+nav { background:#333; display:flex; justify-content:center; }
+nav a { color:white; text-decoration:none; padding:10px 20px; }
+nav a:hover { background:#4CAF50; border-radius:5px; }
 main { margin:20px; }
-.carrera {
+fieldset {
   background:#fff;
-  margin-bottom:20px;
   padding:15px;
-  border-radius:8px;
+  margin-bottom:20px;
+  border-radius:10px;
   box-shadow:0 2px 5px rgba(0,0,0,.1);
 }
-.cerrada { opacity:.6; }
-.finalizada { border-left:6px solid #4CAF50; }
-.abierta { border-left:6px solid orange; }
-h3 { margin-top:0; }
+.video-container iframe { width:100%; height:315px; border-radius:8px; }
 ul { padding-left:20px; }
-footer { text-align:center; margin:40px 0; }
-footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>🏁 Carreras – Bichos a la fuga</h1>
-  <p>Estado y resultados oficiales</p>
+  <h1>🏁 Carreras oficiales</h1>
+  <p>Información previa a la apuesta</p>
 </header>
 
-<main id="contenedorCarreras">
-  Cargando carreras...
+<nav>
+  <a href="index.html">Inicio</a>
+  <a href="apuestas.html">Apuestas</a>
+  <a href="corredores.html">Corredores</a>
+  <a href="carreras.html">Carreras</a>
+</nav>
+
+<main>
+
+<label>
+  Carrera:
+  <select id="selectCarrera"></select>
+</label>
+
+<fieldset>
+  <legend>📺 Vídeo explicativo</legend>
+  <div class="video-container">
+    <iframe id="videoCarrera" src="" allowfullscreen></iframe>
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend>🐌 Participantes</legend>
+  <ul id="listaParticipantes"></ul>
+</fieldset>
+
+<fieldset>
+  <legend>🎯 Opciones de apuesta</legend>
+  <ul>
+    <li>Posición final</li>
+    <li>Primer en moverse</li>
+    <li>Primer en salirse</li>
+    <li>Tiempo de llegada</li>
+    <li>Cuántos llegan a meta</li>
+  </ul>
+</fieldset>
+
 </main>
 
-<footer>
-  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
-  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
-  <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
-  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
-</footer>
-
 <script>
-/* ================= CONFIG ================= */
-const API = "https://bichos-backend.onrender.com";
+/* ================= DATOS FIJOS ================= */
 
-/* ================= CARGAR CARRERAS ================= */
-async function cargarCarreras(){
-  const cont = document.getElementById("contenedorCarreras");
-  cont.textContent = "Cargando carreras...";
-
-  try{
-    const res = await fetch(`${API}/carreras`);
-    const carreras = await res.json();
-
-    cont.innerHTML = "";
-
-    carreras.forEach(c => {
-      const div = document.createElement("div");
-      div.className = `carrera ${c.estado}`;
-
-      let html = `
-        <h3>Carrera ${c.id} – ${c.nombre}</h3>
-        <p><strong>Estado:</strong> ${c.estado}</p>
-      `;
-
-      if(c.estado === "finalizada" && c.resultado){
-        html += `
-          <h4>🏆 Resultado oficial</h4>
-          <ul>
-            <li>🥇 ${c.resultado.posicion[0]}</li>
-            <li>🥈 ${c.resultado.posicion[1]}</li>
-            <li>🥉 ${c.resultado.posicion[2]}</li>
-          </ul>
-          <p><strong>Primer movimiento:</strong> ${c.resultado.primer_movimiento}</p>
-          <p><strong>Primer en salirse:</strong> ${c.resultado.primer_salida}</p>
-          <p><strong>Tiempo:</strong> ${c.resultado.tiempo}</p>
-          <p><strong>Llegaron:</strong> ${c.resultado.cuantos_llegan}</p>
-        `;
-      }
-
-      if(c.estado === "abierta"){
-        html += `<p>🟢 Apuestas abiertas</p>`;
-      }
-
-      if(c.estado === "cerrada"){
-        html += `<p>🔒 Apuestas cerradas</p>`;
-      }
-
-      div.innerHTML = html;
-      cont.appendChild(div);
-    });
-
-  }catch(e){
-    cont.textContent = "❌ Error cargando las carreras";
+const carreras = [
+  {
+    id:1,
+    nombre:"Escalada Pegada",
+    video:"https://www.youtube.com/embed/dQw4w9WgXcQ",
+    participantes:["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"]
+  },
+  {
+    id:2,
+    nombre:"Desliz Extremo",
+    video:"https://www.youtube.com/embed/9bZkp7q19f0",
+    participantes:["Sinhuellas","Toreto","Gari","Arrastrado","Baboso Flash"]
+  },
+  {
+    id:3,
+    nombre:"Reto Baboso",
+    video:"https://www.youtube.com/embed/dQw4w9WgXcQ",
+    participantes:["Gari","Sinhuellas","Toreto","Arrastrado","Baboso Flash"]
+  },
+  {
+    id:4,
+    nombre:"Turbo Caracol",
+    video:"https://www.youtube.com/embed/9bZkp7q19f0",
+    participantes:["Toreto","Gari","Sinhuellas","Arrastrado","Baboso Flash"]
   }
+];
+
+/* ================= INIT ================= */
+
+const select = document.getElementById("selectCarrera");
+const video = document.getElementById("videoCarrera");
+const lista = document.getElementById("listaParticipantes");
+
+carreras.forEach(c=>{
+  const opt = document.createElement("option");
+  opt.value = c.id;
+  opt.textContent = `Carrera ${c.id} – ${c.nombre}`;
+  select.appendChild(opt);
+});
+
+function actualizar(){
+  const carrera = carreras.find(c=>c.id==select.value);
+  video.src = carrera.video;
+  lista.innerHTML = "";
+  carrera.participantes.forEach(p=>{
+    const li=document.createElement("li");
+    li.textContent=p;
+    lista.appendChild(li);
+  });
 }
 
-cargarCarreras();
+select.addEventListener("change", actualizar);
+actualizar();
 </script>
 
 </body>
