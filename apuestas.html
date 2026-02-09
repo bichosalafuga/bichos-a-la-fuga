@@ -79,7 +79,7 @@ pre { background:#f0f0f0; padding:10px; border-radius:5px; white-space:pre-wrap;
 
     <div id="objetivoContainer"></div>
 
-    <label>Cantidad de babosas:
+    <label>Cantidad de babosas (Máximo de apuesta: 100 por carrera):
       <input type="number" name="cantidad" id="cantidadBabosas" min="1" max="100" required>
     </label>
 
@@ -105,7 +105,6 @@ const apuestaResult = document.getElementById('apuestaResult');
 const multiplicadores = { posicion:5, primer_movimiento:4, primer_salida:3, tiempo:3, cuantos_llegan:2 };
 const corredores = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
 let corredorSeleccionado = "";
-let tiempoSeleccionado = "";
 
 function actualizarObjetivo() {
   const tipo = tipoApuesta.value;
