@@ -10,13 +10,8 @@ nav { background: #333; display: flex; justify-content: center; }
 nav a { color: white; text-decoration: none; padding: 10px 20px; }
 nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
 main { margin: 20px; }
-fieldset { margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; border-radius:5px; }
 label { display:block; margin-bottom:10px; }
 select { padding:5px; font-size:16px; }
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-th,td { border:1px solid #ccc; padding:8px; text-align:center; }
-th { background:#eee; }
 .video-container { margin: 20px 0; }
 .video-container iframe { width: 100%; height: 315px; }
 .social-links { margin-top: 15px; }
@@ -27,7 +22,7 @@ th { background:#eee; }
 
 <header>
   <h1>🏁 Carreras - Bichos a la fuga</h1>
-  <p>Consulta la información de cada carrera antes de apostar</p>
+  <p>Consulta el video de cada carrera</p>
 </header>
 
 <nav>
@@ -58,46 +53,6 @@ th { background:#eee; }
   <iframe id="videoExplicativo" src="" title="Video explicativo" frameborder="0" allowfullscreen></iframe>
 </div>
 
-<h2>Datos para apostar</h2>
-<fieldset>
-  <legend>Participantes</legend>
-  <ul id="participantesList"></ul>
-</fieldset>
-
-<fieldset>
-  <legend>Opciones de apuesta</legend>
-  <table>
-    <thead>
-      <tr>
-        <th>Tipo de apuesta</th>
-        <th>Opciones posibles</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Posición final</td>
-        <td>1-5 posiciones para cada participante</td>
-      </tr>
-      <tr>
-        <td>Primer en moverse</td>
-        <td id="primerMovimientoOptions"></td>
-      </tr>
-      <tr>
-        <td>Primer en salirse</td>
-        <td id="primerSalidaOptions"></td>
-      </tr>
-      <tr>
-        <td>Tiempo de llegada</td>
-        <td>0-10, 10-20, 20-30 segundos</td>
-      </tr>
-      <tr>
-        <td>Cuántos llegan</td>
-        <td>1, 2, 3, 4, 5</td>
-      </tr>
-    </tbody>
-  </table>
-</fieldset>
-
 <h2>Redes sociales</h2>
 <div class="social-links">
   <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a>
@@ -107,17 +62,6 @@ th { background:#eee; }
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
-  const participantesPorCarrera = {
-    1: ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"],
-    2: ["Sinhuellas","Toreto","Gari","Arrastrado","Baboso Flash"],
-    3: ["Gari","Sinhuellas","Toreto","Arrastrado","Baboso Flash"],
-    4: ["Toreto","Gari","Sinhuellas","Arrastrado","Baboso Flash"],
-    5: ["Sinhuellas","Gari","Toreto","Arrastrado","Baboso Flash"],
-    6: ["Gari","Toreto","Sinhuellas","Arrastrado","Baboso Flash"],
-    7: ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"],
-    8: ["Baboso Flash","Toreto","Sinhuellas","Gari","Arrastrado"]
-  };
 
   const videosExplicativos = {
     1: "https://www.youtube.com/embed/dQw4w9WgXcQ",
@@ -130,27 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
     8: "https://www.youtube.com/embed/9bZkp7q19f0"
   };
 
-  const primerMovimiento = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
-  const primerSalida = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
-
   function actualizarCarrera() {
     const carreraId = parseInt(document.getElementById("selectCarrera").value);
-
-    // Video
     document.getElementById("videoExplicativo").src = videosExplicativos[carreraId];
-
-    // Participantes
-    const ul = document.getElementById("participantesList");
-    ul.innerHTML = "";
-    participantesPorCarrera[carreraId].forEach(p => {
-      const li = document.createElement("li");
-      li.textContent = p;
-      ul.appendChild(li);
-    });
-
-    // Primer movimiento / primer salida
-    document.getElementById("primerMovimientoOptions").textContent = primerMovimiento.join(", ");
-    document.getElementById("primerSalidaOptions").textContent = primerSalida.join(", ");
   }
 
   document.getElementById("selectCarrera").addEventListener("change", actualizarCarrera);
