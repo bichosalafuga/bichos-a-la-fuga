@@ -4,26 +4,38 @@
 <meta charset="UTF-8">
 <title>🐌 Apostar en Bichos a la fuga</title>
 <style>
-body { font-family:sans-serif; margin:20px; background:#f8f8f8; }
-fieldset { margin-bottom:20px; padding:15px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-label { display:block; margin-bottom:10px; }
-input, select { padding:5px; font-size:16px; margin-top:5px; width:100%; box-sizing:border-box; }
-button { background-color:#4CAF50; color:white; border:none; padding:8px 16px; cursor:pointer; border-radius:5px; margin-top:10px; }
-button:hover { background-color:#45a049; }
-pre { background:#f0f0f0; padding:10px; white-space:pre-wrap; border-radius:5px; margin-top:10px; }
-nav { background:#333; display:flex; justify-content:center; padding:10px; margin-bottom:20px; }
-nav a { color:white; text-decoration:none; padding:10px 20px; }
-nav a:hover { background-color:#4CAF50; border-radius:5px; }
-.social-links { margin-top: 20px; text-align:center; }
-.social-links a { margin-right: 10px; text-decoration:none; color:#4CAF50; font-weight:bold; }
-#ranking { margin-top:20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+body { font-family:sans-serif; margin:0; background:#f8f8f8; }
+header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+nav { background:#333; display:flex; justify-content:center; flex-wrap:wrap; }
+nav a { color:white; text-decoration:none; padding:10px 20px; margin:2px; }
+nav a:hover { background-color:#45a049; border-radius:5px; }
+main { margin:20px; }
+fieldset { background:#fff; border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 2px 5px rgba(0,0,0,0.1); transition:0.3s; }
+label { display:block; margin-bottom:10px; font-weight:bold; }
+select, input { width:100%; padding:8px; margin-top:5px; font-size:16px; box-sizing:border-box; border-radius:5px; border:1px solid #ccc; transition:0.2s; }
+select:hover, input:hover { border-color:#4CAF50; }
+button { background:#4CAF50; color:white; border:none; padding:12px 25px; border-radius:5px; cursor:pointer; margin-top:10px; font-size:16px; transition:0.3s; }
+button:hover { background:#45a049; transform:scale(1.05); }
+#objetivoContainer { margin-top:10px; }
+.corredores { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.corredor-card { background:#e0ffe0; padding:15px; border-radius:10px; flex:1 1 120px; text-align:center; cursor:pointer; transition:0.3s; border:2px solid transparent; font-weight:bold; }
+.corredor-card:hover { transform:scale(1.05); }
+.corredor-card.selected { border-color:#4CAF50; background:#c0ffc0; }
+.corredor-card.posicion { background:#fff0b3; }
+.corredor-card.primer_movimiento { background:#b3d9ff; }
+.corredor-card.primer_salida { background:#ffb3b3; }
+.corredor-card.tiempo { background:#ffde9e; }
+.social-links { text-align:center; margin-top:20px; }
+.social-links a { display:inline-block; margin:5px; padding:12px 20px; background:#4CAF50; color:white; text-decoration:none; border-radius:10px; font-weight:bold; font-size:16px; transition:0.3s; }
+.social-links a:hover { background:#45a049; transform:scale(1.05); }
+pre { background:#f0f0f0; padding:10px; border-radius:5px; white-space:pre-wrap; margin-top:10px; }
 </style>
 </head>
 <body>
 
 <header>
-<h1>🐌 Apostar en Bichos a la fuga</h1>
-<p>Rellena tus datos y envía la apuesta por correo</p>
+  <h1>🐌 Apostar en Bichos a la fuga</h1>
+  <p>Selecciona tus apuestas y envíalas por correo</p>
 </header>
 
 <nav>
@@ -35,41 +47,11 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
 
 <main>
 
-<!-- Apartado de reglas -->
-<fieldset>
-  <legend>Cómo apostar en Bichos a la fuga</legend>
-  <p>Antes de realizar tu apuesta, ten en cuenta las siguientes reglas:</p>
-  <ul>
-    <li>Cada carrera tiene <strong>5 corredores</strong>.</li>
-    <li>Tipos de apuestas:
-      <ul>
-        <li><strong>Posición final:</strong> Primer, segundo o tercer lugar. Multiplica tus babosas por 5.</li>
-        <li><strong>Primer en moverse:</strong> Qué corredor se mueve primero. Multiplica tus babosas por 4.</li>
-        <li><strong>Primer en salirse:</strong> Qué corredor se sale primero. Multiplica tus babosas por 3.</li>
-        <li><strong>Mejor tiempo de llegada:</strong> 0-10, 10-20 o 20-30 minutos. Multiplica tus babosas por 3.</li>
-        <li><strong>Número de corredores que se salen:</strong> Cuántos se salen. Multiplica tus babosas por 2.</li>
-      </ul>
-    </li>
-    <li><strong>Límite de apuesta:</strong> Máximo <strong>100 babosas por carrera</strong>. Si apuestas más, la apuesta será inválida.</li>
-    <li>Al ganar, tus babosas se transforman en <strong>lechuguines</strong> según el multiplicador.</li>
-    <li>Para apostar:
-      <ol>
-        <li>Rellena tus datos en el formulario.</li>
-        <li>Selecciona carrera y tipo de apuesta.</li>
-        <li>Indica cantidad de babosas (máximo 100).</li>
-        <li>Haz clic en <em>Enviar apuesta por correo</em>.</li>
-      </ol>
-    </li>
-    <li>El <strong>ranking</strong> se actualizará manualmente una vez finalice la carrera.</li>
-  </ul>
-</fieldset>
-
-<!-- Formulario de apuestas -->
 <fieldset>
   <legend>Registrar apuesta</legend>
   <form id="apuestaForm">
-    <label>Nombre de usuario (Utilizar siempre el mismo):
-      <input type="text" name="usuario" placeholder="Escribe tu nombre" required>
+    <label>Nombre de usuario:
+      <input type="text" name="usuario" placeholder="Tu nombre" required>
     </label>
 
     <label>Carrera:
@@ -88,16 +70,16 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
     <label>Tipo de apuesta:
       <select name="tipo" id="tipoApuesta" required>
         <option value="posicion">Posición final</option>
-        <option value="primer_movimiento">Primero en moverse</option>
-        <option value="primer_salida">Primero en salirse</option>
-        <option value="tiempo">Tiempo de llegada</option>
+        <option value="primer_movimiento">Primer en moverse</option>
+        <option value="primer_salida">Primer en salirse</option>
+        <option value="tiempo">Tiempo de llegada (primer corredor)</option>
         <option value="cuantos_llegan">Número de corredores que se salen</option>
       </select>
     </label>
 
     <div id="objetivoContainer"></div>
 
-    <label>Cantidad de babosas (por carrera):
+    <label>Cantidad de babosas:
       <input type="number" name="cantidad" id="cantidadBabosas" min="1" max="100" required>
     </label>
 
@@ -106,30 +88,12 @@ nav a:hover { background-color:#4CAF50; border-radius:5px; }
   <pre id="apuestaResult"></pre>
 </fieldset>
 
-<!-- Ranking manual -->
-<div id="ranking">
-  <h3>🏆 Ranking</h3>
-  <ul id="rankingList">
-    <li>1. Usuario1 - 50 lechuguines</li>
-    <li>2. Usuario2 - 45 lechuguines</li>
-    <li>3. Usuario3 - 40 lechuguines</li>
-    <!-- Aquí se actualizarán los 30 primeros manualmente -->
-  </ul>
-</div>
-
-<h2>Redes sociales</h2>
 <div class="social-links">
-  <a href="https://www.instagram.com/bichosalafuga/" target="_blank" class="social-btn instagram">
-    📸 Instagram
-  </a>
-  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank" class="social-btn tiktok">
-    🎵 TikTok
-  </a>
-  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank" class="social-btn youtube">
-    ▶️ YouTube
-  </a>
+  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">📸 Instagram</a>
+  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">🎵 TikTok</a>
+  <a href="https://x.com/bichosalafuga" target="_blank">💬 X</a>
+  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">▶️ YouTube</a>
 </div>
-
 
 <script>
 const tipoApuesta = document.getElementById('tipoApuesta');
@@ -138,111 +102,119 @@ const selectCarrera = document.getElementById('selectCarrera');
 const apuestaForm = document.getElementById('apuestaForm');
 const apuestaResult = document.getElementById('apuestaResult');
 
-// Multiplicadores
-const multiplicadores = {
-  posicion: 5,
-  primer_movimiento: 4,
-  primer_salida: 3,
-  tiempo: 3,
-  cuantos_llegan: 2
-};
+const multiplicadores = { posicion:5, primer_movimiento:4, primer_salida:3, tiempo:3, cuantos_llegan:2 };
+const corredores = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
+let corredorSeleccionado = "";
+let tiempoSeleccionado = "";
 
-// Nombres reales de corredores por carrera
-const corredoresPorCarrera = {
-  1: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"],
-  2: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"],
-  3: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"],
-  4: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"],
-  5: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"],
-  6: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"],
-  7: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"],
-  8: ["Toreto", "Sinhuellas", "Gari", "Arrastrado", "Baboso Flash"]
-};
-
-// Función para generar campo objetivo según tipo de apuesta
 function actualizarObjetivo() {
   const tipo = tipoApuesta.value;
-  const carreraId = parseInt(selectCarrera.value);
-  let html = '';
+  let html = "";
 
-  switch(tipo){
-    case 'posicion':
-      html = `<label>Selecciona posición:
-                <select name="objetivo" required>
-                  <option value="1">1º</option>
-                  <option value="2">2º</option>
-                  <option value="3">3º</option>
-                </select>
-              </label>`;
-      break;
-    case 'primer_movimiento':
-    case 'primer_salida':
-      html = `<label>Selecciona corredor:
-                <select name="objetivo" required>`;
-      corredoresPorCarrera[carreraId].forEach(nombre => {
-        html += `<option value="${nombre}">${nombre}</option>`;
-      });
-      html += `</select></label>`;
-      break;
-    case 'tiempo':
-      html = `<label>Selecciona rango de tiempo:
-                <select name="objetivo" required>
-                  <option value="0-10">0-10 min</option>
-                  <option value="10-20">10-20 min</option>
-                  <option value="20-30">20-30 min</option>
-                </select>
-              </label>`;
-      break;
-    case 'cuantos_llegan':
-      html = `<label>Número de corredores que se salen:
-                <select name="objetivo" required>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </label>`;
-      break;
+  if(tipo === "posicion") {
+    html = `<label>Selecciona posición:
+              <select id="posicion" required>
+                <option value="1">1º</option>
+                <option value="2">2º</option>
+                <option value="3">3º</option>
+              </select>
+            </label>
+            <div class="corredores" id="corredorCards"></div>`;
+  } else if(tipo === "primer_movimiento" || tipo === "primer_salida") {
+    html = `<div class="corredores" id="corredorCards"></div>`;
+  } else if(tipo === "tiempo") {
+    html = `<label>Selecciona tiempo de llegada:
+              <select id="tiempo" required>
+                <option value="0-10">0-10 min</option>
+                <option value="10-20">10-20 min</option>
+                <option value="20-30">20-30 min</option>
+              </select>
+            </label>
+            <div class="corredores" id="corredorCards"></div>`;
+  } else if(tipo === "cuantos_llegan") {
+    html = `<label>Número de corredores que se salen:
+              <select name="objetivo" required>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>`;
   }
 
   objetivoContainer.innerHTML = html;
+
+  if(tipo === "posicion" || tipo === "primer_movimiento" || tipo === "primer_salida" || tipo === "tiempo") {
+    const cont = document.getElementById("corredorCards");
+    corredores.forEach(nombre => {
+      const div = document.createElement("div");
+      div.className = "corredor-card " + tipo;
+      div.textContent = nombre;
+      div.addEventListener("click", () => {
+        document.querySelectorAll(".corredor-card").forEach(c=>c.classList.remove("selected"));
+        div.classList.add("selected");
+        corredorSeleccionado = nombre;
+      });
+      cont.appendChild(div);
+    });
+  }
 }
 
-// Inicializar
 actualizarObjetivo();
+tipoApuesta.addEventListener("change", actualizarObjetivo);
+selectCarrera.addEventListener("change", actualizarObjetivo);
 
-// Actualizar al cambiar tipo de apuesta o carrera
-tipoApuesta.addEventListener('change', actualizarObjetivo);
-selectCarrera.addEventListener('change', actualizarObjetivo);
-
-// Enviar formulario
-apuestaForm.addEventListener('submit', function(e){
+apuestaForm.addEventListener("submit", function(e){
   e.preventDefault();
   const formData = new FormData(apuestaForm);
-  const usuario = formData.get('usuario');
-  const carrera = formData.get('carrera');
-  const tipo = formData.get('tipo');
-  const objetivo = formData.get('objetivo');
-  const cantidad = parseInt(formData.get('cantidad'));
+  const usuario = formData.get("usuario");
+  const carrera = formData.get("carrera");
+  const tipo = tipoApuesta.value;
+  let objetivo = "";
 
+  if(tipo === "posicion") {
+    const pos = document.getElementById("posicion").value;
+    if(!corredorSeleccionado){
+      apuestaResult.textContent = "❌ Selecciona un corredor para la posición.";
+      return;
+    }
+    objetivo = `${pos}º - ${corredorSeleccionado}`;
+  } else if(tipo === "primer_movimiento" || tipo === "primer_salida"){
+    if(!corredorSeleccionado){
+      apuestaResult.textContent = "❌ Selecciona un corredor.";
+      return;
+    }
+    objetivo = corredorSeleccionado;
+  } else if(tipo === "tiempo") {
+    const tiempo = document.getElementById("tiempo").value;
+    if(!corredorSeleccionado){
+      apuestaResult.textContent = "❌ Selecciona un corredor para el tiempo de llegada.";
+      return;
+    }
+    objetivo = `${corredorSeleccionado} - ${tiempo}`;
+  } else {
+    objetivo = formData.get("objetivo");
+  }
+
+  const cantidad = parseInt(formData.get("cantidad"));
   if(cantidad > 100){
-    apuestaResult.textContent = '❌ La apuesta excede 100 babosas y no será válida.';
+    apuestaResult.textContent = "❌ La apuesta excede 100 babosas y no será válida.";
     return;
   }
 
   const lechuguines = cantidad * multiplicadores[tipo];
   const asunto = encodeURIComponent(`Apuesta de ${usuario}`);
   const cuerpo = encodeURIComponent(
-    `Usuario: ${usuario}\nCarrera: ${carrera}\nTipo de apuesta: ${tipo}\nObjetivo: ${objetivo}\nCantidad apostada: ${cantidad}\nLechuguines potenciales: ${lechuguines}`
+    `Usuario: ${usuario}\nCarrera: ${carrera}\nTipo: ${tipo}\nObjetivo: ${objetivo}\nCantidad: ${cantidad}\nLechuguines potenciales: ${lechuguines}`
   );
 
   const mailtoLink = `mailto:bichosalafuga@gmail.com?subject=${asunto}&body=${cuerpo}`;
-  apuestaResult.innerHTML = `✅ Apuesta válida. Lechuguines potenciales: ${lechuguines}\n\nHaz clic aquí para enviar el correo:\n<a href="${mailtoLink}">Enviar apuesta por correo</a>`;
+  apuestaResult.innerHTML = `✅ Apuesta válida. Lechuguines potenciales: ${lechuguines}\n\n<a href="${mailtoLink}">Enviar apuesta por correo</a>`;
 });
 </script>
 
-</main>
 </body>
 </html>
+
