@@ -2,166 +2,106 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Bichos a la fuga - Carreras</title>
+<title>Bichos a la fuga – Carreras</title>
+
 <style>
-body { font-family: sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
-header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
-nav { background: #333; display: flex; justify-content: center; }
-nav a { color: white; text-decoration: none; padding: 10px 20px; }
-nav a:hover { background-color: #4CAF50; color: white; border-radius: 5px; }
-main { margin: 20px; }
-fieldset { margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; border-radius:5px; }
-label { display:block; margin-bottom:10px; }
-select { padding:5px; font-size:16px; }
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-th,td { border:1px solid #ccc; padding:8px; text-align:center; }
-th { background:#eee; }
-.video-container { margin: 20px 0; }
-.video-container iframe { width: 100%; height: 315px; }
-.social-links { margin-top: 15px; }
-.social-links a { margin-right: 10px; text-decoration:none; color:#4CAF50; font-weight:bold; }
+body { font-family:sans-serif; margin:0; background:#f8f8f8; }
+header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+main { margin:20px; }
+.carrera {
+  background:#fff;
+  margin-bottom:20px;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+.cerrada { opacity:.6; }
+.finalizada { border-left:6px solid #4CAF50; }
+.abierta { border-left:6px solid orange; }
+h3 { margin-top:0; }
+ul { padding-left:20px; }
+footer { text-align:center; margin:40px 0; }
+footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
 </style>
 </head>
+
 <body>
 
 <header>
-  <h1>🏁 Carreras - Bichos a la fuga</h1>
-  <p>Consulta la información de cada carrera antes de apostar</p>
+  <h1>🏁 Carreras – Bichos a la fuga</h1>
+  <p>Estado y resultados oficiales</p>
 </header>
 
-<nav>
-  <a href="index.html">Inicio</a>
-  <a href="apuestas.html">Apuestas</a>
-  <a href="corredores.html">Corredores</a>
-  <a href="carreras.html">Carreras</a>
-</nav>
+<main id="contenedorCarreras">
+  Cargando carreras...
+</main>
 
-<main>
-
-<h2>Selecciona la carrera</h2>
-<label>
-  Carrera:
-  <select id="selectCarrera">
-    <option value="1">Escalada Pegada</option>
-    <option value="2">Desliz Extremo</option>
-    <option value="3">Reto Baboso</option>
-    <option value="4">Turbo Caracol</option>
-    <option value="5">Lenta Conquista</option>
-    <option value="6">Súper Resbalón</option>
-    <option value="7">Meta Babosa</option>
-    <option value="8">Final Legendaria</option>
-  </select>
-</label>
-
-<h2>Video explicativo</h2>
-<div class="video-container">
-  <iframe id="videoExplicativo" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video explicativo" frameborder="0" allowfullscreen></iframe>
-</div>
-
-<h2>Datos para apostar</h2>
-<fieldset>
-  <legend>Participantes</legend>
-  <ul id="participantesList"></ul>
-</fieldset>
-
-<fieldset>
-  <legend>Opciones de apuesta</legend>
-  <table>
-    <thead>
-      <tr>
-        <th>Tipo de apuesta</th>
-        <th>Opciones posibles</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Posición final</td>
-        <td>1-5 posiciones para cada participante</td>
-      </tr>
-      <tr>
-        <td>Primer en moverse</td>
-        <td id="primerMovimientoOptions"></td>
-      </tr>
-      <tr>
-        <td>Primer en salirse</td>
-        <td id="primerSalidaOptions"></td>
-      </tr>
-      <tr>
-        <td>Tiempo de llegada</td>
-        <td>0-10, 10-20, 20-30 segundos</td>
-      </tr>
-      <tr>
-        <td>Cuántos llegan</td>
-        <td>1, 2, 3, 4, 5</td>
-      </tr>
-    </tbody>
-  </table>
-</fieldset>
-
-<h2>Redes sociales</h2>
-<div class="social-links">
-  <a href="https://www.instagram.com/" target="_blank">Instagram</a>
-  <a href="https://www.tiktok.com/" target="_blank">TikTok</a>
-  <a href="https://www.youtube.com/" target="_blank">Canal YouTube</a>
-</div>
+<footer>
+  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
+  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
+  <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
+  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
+</footer>
 
 <script>
-// Datos de cada carrera
-const participantesPorCarrera = {
-  1: ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"],
-  2: ["Sinhuellas","Toreto","Gari","Arrastrado","Baboso Flash"],
-  3: ["Gari","Sinhuellas","Toreto","Arrastrado","Baboso Flash"],
-  4: ["Toreto","Gari","Sinhuellas","Arrastrado","Baboso Flash"],
-  5: ["Sinhuellas","Gari","Toreto","Arrastrado","Baboso Flash"],
-  6: ["Gari","Toreto","Sinhuellas","Arrastrado","Baboso Flash"],
-  7: ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"],
-  8: ["Baboso Flash","Toreto","Sinhuellas","Gari","Arrastrado"]
-};
+/* ================= CONFIG ================= */
+const API = "https://bichos-backend.onrender.com";
 
-// Opciones de primer movimiento y primer salida
-const primerMovimiento = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
-const primerSalida = ["Toreto","Sinhuellas","Gari","Arrastrado","Baboso Flash"];
+/* ================= CARGAR CARRERAS ================= */
+async function cargarCarreras(){
+  const cont = document.getElementById("contenedorCarreras");
+  cont.textContent = "Cargando carreras...";
 
-// Videos explicativos por carrera
-const videosExplicativos = {
-  1: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  2: "https://www.youtube.com/embed/9bZkp7q19f0",
-  3: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  4: "https://www.youtube.com/embed/9bZkp7q19f0",
-  5: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  6: "https://www.youtube.com/embed/9bZkp7q19f0",
-  7: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  8: "https://www.youtube.com/embed/9bZkp7q19f0"
-};
+  try{
+    const res = await fetch(`${API}/carreras`);
+    const carreras = await res.json();
 
-function actualizarCarrera(){
-  const carreraId = document.getElementById("selectCarrera").value;
-  
-  // Actualizar video
-  document.getElementById("videoExplicativo").src = videosExplicativos[carreraId];
+    cont.innerHTML = "";
 
-  // Participantes
-  const ul = document.getElementById("participantesList");
-  ul.innerHTML="";
-  participantesPorCarrera[carreraId].forEach(p => {
-    const li = document.createElement("li");
-    li.textContent = p;
-    ul.appendChild(li);
-  });
+    carreras.forEach(c => {
+      const div = document.createElement("div");
+      div.className = `carrera ${c.estado}`;
 
-  // Primer movimiento / primer salida
-  document.getElementById("primerMovimientoOptions").innerText = primerMovimiento.join(", ");
-  document.getElementById("primerSalidaOptions").innerText = primerSalida.join(", ");
+      let html = `
+        <h3>Carrera ${c.id} – ${c.nombre}</h3>
+        <p><strong>Estado:</strong> ${c.estado}</p>
+      `;
+
+      if(c.estado === "finalizada" && c.resultado){
+        html += `
+          <h4>🏆 Resultado oficial</h4>
+          <ul>
+            <li>🥇 ${c.resultado.posicion[0]}</li>
+            <li>🥈 ${c.resultado.posicion[1]}</li>
+            <li>🥉 ${c.resultado.posicion[2]}</li>
+          </ul>
+          <p><strong>Primer movimiento:</strong> ${c.resultado.primer_movimiento}</p>
+          <p><strong>Primer en salirse:</strong> ${c.resultado.primer_salida}</p>
+          <p><strong>Tiempo:</strong> ${c.resultado.tiempo}</p>
+          <p><strong>Llegaron:</strong> ${c.resultado.cuantos_llegan}</p>
+        `;
+      }
+
+      if(c.estado === "abierta"){
+        html += `<p>🟢 Apuestas abiertas</p>`;
+      }
+
+      if(c.estado === "cerrada"){
+        html += `<p>🔒 Apuestas cerradas</p>`;
+      }
+
+      div.innerHTML = html;
+      cont.appendChild(div);
+    });
+
+  }catch(e){
+    cont.textContent = "❌ Error cargando las carreras";
+  }
 }
 
-// Evento cambio de carrera
-document.getElementById("selectCarrera").addEventListener("change", actualizarCarrera);
-
-// Inicializa
-actualizarCarrera();
+cargarCarreras();
 </script>
 
-</main>
 </body>
 </html>
+
