@@ -7,9 +7,12 @@
 <style>
 body { font-family:sans-serif; margin:0; background:#f8f8f8; }
 header { background:#4CAF50; color:white; padding:20px; text-align:center; }
-main { margin:20px; display:grid;
-       grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-       gap:20px; }
+main {
+  margin:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
 .corredor {
   background:#fff;
   padding:15px;
@@ -28,62 +31,61 @@ footer a { margin:0 10px; color:#4CAF50; text-decoration:none; }
 
 <header>
   <h1>🐌 Corredores oficiales</h1>
-  <p>Los bichos más rápidos (o menos lentos)</p>
+  <p>Los protagonistas del barro</p>
 </header>
 
-<main id="listaCorredores">
-  Cargando corredores...
-</main>
+<main id="listaCorredores"></main>
 
 <footer>
-  <a href="https://www.instagram.com/bichosalafuga/" target="_blank">Instagram</a> ·
-  <a href="https://www.tiktok.com/@bichosalafuga" target="_blank">TikTok</a> ·
-  <a href="https://x.com/bichosalafuga" target="_blank">X</a> ·
-  <a href="https://www.youtube.com/@BichosalaFuga" target="_blank">YouTube</a>
+  <a href="index.html">Inicio</a> ·
+  <a href="carreras.html">Carreras</a> ·
+  <a href="apuestas.html">Apostar</a>
 </footer>
 
 <script>
-/* ================= CONFIG ================= */
-const API = "https://bichos-backend.onrender.com";
-
-/* ================= CARGAR CORREDORES ================= */
-async function cargarCorredores(){
-  const cont = document.getElementById("listaCorredores");
-
-  try{
-    const res = await fetch(`${API}/corredores`);
-    const corredores = await res.json();
-
-    cont.innerHTML = "";
-
-    corredores.forEach(c => {
-      const div = document.createElement("div");
-      div.className = "corredor";
-
-      div.innerHTML = `
-        <h3>${c.nombre}</h3>
-        <p>${c.descripcion || "Caracol profesional"}</p>
-
-        <div class="stats">
-          <p>🏆 Victorias: ${c.victorias ?? 0}</p>
-          <p>🥈 Podios: ${c.podios ?? 0}</p>
-          <p>🏁 Carreras: ${c.carreras ?? 0}</p>
-          <p>⚡ Primer movimiento: ${c.primer_movimiento ?? 0}</p>
-          <p>💥 Primer en salirse: ${c.primer_salida ?? 0}</p>
-        </div>
-      `;
-
-      cont.appendChild(div);
-    });
-
-  }catch(e){
-    cont.textContent = "❌ Error cargando corredores";
+/* ================= CORREDORES FIJOS ================= */
+const corredores = [
+  {
+    nombre: "Toreto",
+    descripcion: "Sale lento, pero cuando arranca no hay quien lo pare."
+  },
+  {
+    nombre: "Sinhuellas",
+    descripcion: "Sigiloso, impredecible y amante del carril interior."
+  },
+  {
+    nombre: "Gari",
+    descripcion: "Constante, trabajador y siempre acaba llegando."
+  },
+  {
+    nombre: "Arrastrado",
+    descripcion: "Especialista en remontadas imposibles."
+  },
+  {
+    nombre: "Baboso Flash",
+    descripcion: "Rápido… para ser un caracol."
   }
-}
+];
 
-cargarCorredores();
+/* ================= PINTAR ================= */
+const cont = document.getElementById("listaCorredores");
+
+corredores.forEach(c => {
+  const div = document.createElement("div");
+  div.className = "corredor";
+
+  div.innerHTML = `
+    <h3>${c.nombre}</h3>
+    <p>${c.descripcion}</p>
+    <div class="stats">
+      <p>🏁 Participante oficial</p>
+      <p>🐌 Nivel: impredecible</p>
+    </div>
+  `;
+
+  cont.appendChild(div);
+});
 </script>
 
 </body>
 </html>
-
