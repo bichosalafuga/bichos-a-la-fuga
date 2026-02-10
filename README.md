@@ -89,7 +89,9 @@ Este proyecto se desarrolla con fines experimentales, creativos y de entretenimi
 - HTML, CSS y JavaScript
 - GitHub Pages (hosting gratuito)
 - YouTube Live (streaming)
-- Backend ligero para gestión de carreras y apuestas ficticias
+- Creador de contenido e imágenes (IA)
+- Editor de vídeos (IA)
+- Formularios web (Google Forms)
 
 ---
 
