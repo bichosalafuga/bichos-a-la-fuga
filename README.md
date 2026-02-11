@@ -92,6 +92,7 @@ Este proyecto se desarrolla con fines experimentales, creativos y de entretenimi
 - Creador de contenido e imágenes (IA)
 - Editor de vídeos (IA)
 - Formularios web (Google Forms)
+- Contador de visitas Visitorbadge
 
 ---
 
