@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       nombre: "Toreto",
       descripcion: "Sale lento, pero cuando arranca no hay quien lo pare.",
+      entrenador: ["Juanma"],
       habilidades: ["Arranque veloz", "Resistencia alta"],
       debilidades: ["Poca maniobrabilidad en curvas"],
       video: "https://www.youtube.com/embed/dQw4w9WgXcQ"
@@ -79,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       nombre: "Sinhuellas",
       descripcion: "No deja rastro.",
+      entrenador: ["Erika"],
       habilidades: ["Sigiloso", "Evitación de obstáculos"],
       debilidades: ["Velocidad media"],
       video: "https://www.youtube.com/embed/5qap5aO4i9A"
@@ -86,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       nombre: "Gari",
       descripcion: "Ojo loco.",
+      entrenador: ["Jony"],,
       habilidades: ["Saltos impredecibles", "Acelera sorpresivamente"],
       debilidades: ["Inconstante", "Se distrae fácil"],
       video: "https://www.youtube.com/embed/3JZ_D3ELwOQ"
@@ -93,12 +96,14 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       nombre: "Lento McQueen",
       descripcion: "Lento pero constante.",
+      entrenador: ["Andrea"],
       habilidades: ["Constancia, empoderado y chulo", "No se cansa fácilmente"],
       debilidades: ["Muy lento al inicio"],
       video: "https://www.youtube.com/embed/V-_O7nl0Ii0"
     },
     {
       nombre: "Baboso Flash",
+      entrenador: ["Carlos"],
       descripcion: "Rápido y resbaladizo.",
       habilidades: ["Gran velocidad punta", "Agilidad extrema"],
       debilidades: ["Se resbala en curvas húmedas"],
@@ -117,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <h3>${c.nombre}</h3>
       <p class="descripcion">${c.descripcion}</p>
       <div class="stats">
+        <strong>Entrenador:</strong> ${c.Entrenador.join(", ")}<br>
         <strong>Habilidades:</strong> ${c.habilidades.join(", ")}<br>
         <strong>Debilidades:</strong> ${c.debilidades.join(", ")}
       </div>
